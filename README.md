@@ -19,8 +19,8 @@ git clone https://codeup.aliyun.com/60a7c4c62c5969c370c58471/pudu_data_platform/
 cd pdp    // 进入模板目录
 mvn install         // 安装项目依赖，等待安装完成生成jar
 
-// 开启服务器，浏览器访问 http://localhost:8899/doc.html
-java -jar .\pdp-1.0-SNAPSHOT.jar
+// 开启服务器，浏览器访问 http://localhost:8807/doc.html
+release/bin/start.sh
 ```
 
 #### 使用说明
