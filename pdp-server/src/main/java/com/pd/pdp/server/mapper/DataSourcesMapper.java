@@ -13,12 +13,7 @@ import com.pd.notscan.BaseMapper;
 
 import java.util.List;
 
-/**
- * ClassName: DataSourcesMapper
- *
- * @author zyc-admin
- * @Description:
- */
+
 @Mapper
 @Repository
 public interface DataSourcesMapper extends BaseMapper<DataSourcesInfo> {

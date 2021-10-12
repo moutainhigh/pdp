@@ -39,12 +39,20 @@ public class DataSourcesController {
     DataSourcesService dataSourcesServiceImpl;
 
 
-    @ApiOperation(value = "获取当前用户下的所有数据源")
+    @ApiOperation(value = "分页获取当前用户下的数据源")
     @PostMapping(value = "/data_sources_list")
-    public Result<PageDTO<DataSourcesInfo>> data_sources_list(@RequestBody Request<PageVO<DatasourcePageVO>> request) {
+    public Result<PageDTO<DataSourcesInfo>> dataSourcesList(@RequestBody Request<PageVO<DatasourcePageVO>> request) {
 
         PageDTO<DataSourcesInfo> dataSourcesInfos = dataSourcesServiceImpl.findByCondition(request.getData(), request.getUserId());
         return ResultGenerator.getSuccessResult(dataSourcesInfos);
+    }
+
+    @ApiOperation(value = "获取所有数据源")
+    @PostMapping(value = "/data_sources_all")
+    public Result<List<DataSourcesInfo>> dataSourcesAll(@RequestBody Request request) {
+
+        List<DataSourcesInfo> dataSourcesAll = dataSourcesServiceImpl.selectAll();
+        return ResultGenerator.getSuccessResult(dataSourcesAll);
     }
 
 
@@ -70,7 +78,7 @@ public class DataSourcesController {
 
     @ApiOperation(value = "新增数据源")
     @PostMapping(value = "/add_data_sources")
-    public Result add_data_sources(@RequestBody Request<JSONObject> request) {
+    public Result addDataSources(@RequestBody Request<JSONObject> request) {
         DataSourcesInfo dataSourcesInfo = JSONObject.parseObject(request.getData().toString(), DataSourcesInfo.class);
         dataSourcesInfo.setCreateUserId(request.getUserId());
         dataSourcesInfo.setUpdateUserId(request.getUserId());
@@ -84,7 +92,7 @@ public class DataSourcesController {
 
     @ApiOperation(value = "更新数据源")
     @PostMapping("/data_sources_update")
-    public Result data_sources_update(@RequestBody Request<DataSourcesInfo> request) {
+    public Result dataSourcesUpdate(@RequestBody Request<DataSourcesInfo> request) {
         DataSourcesInfo dataSourcesInfo = request.getData();
         dataSourcesInfo.setCreateUserId(request.getUserId());
         dataSourcesInfo.setUpdateTime(new Timestamp(System.currentTimeMillis()));
@@ -96,7 +104,7 @@ public class DataSourcesController {
 
     @ApiOperation(value = "获取所有的数据源类型")
     @PostMapping(value = "/data_sources_type")
-    public Result<List<DataSourcesTypeInfo>> data_sources_type() {
+    public Result<List<DataSourcesTypeInfo>> dataSourcesType() {
         List<DataSourcesTypeInfo> result = dataSourcesServiceImpl.selectDataSourcesType();
 
         return ResultGenerator.getSuccessResult(result);
