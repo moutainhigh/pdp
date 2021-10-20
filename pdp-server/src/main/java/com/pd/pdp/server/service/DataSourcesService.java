@@ -9,6 +9,12 @@ import com.pd.pdp.server.vo.PageVO;
 
 import java.util.List;
 
+/**
+ * ClassName: DataSourcesService
+ *
+ * @author zyc-admin
+ * @Description:
+ */
 public interface DataSourcesService {
 
     public DataSourcesInfo selectById(int id);

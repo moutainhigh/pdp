@@ -45,7 +45,6 @@
         <knife4j-spring-boot-starter.version>2.0.4</knife4j-spring-boot-starter.version>
         <sigar.version>1.6.4</sigar.version>
         <mysql.version>5.1.44</mysql.version>
-        <hive.version>2.1.1</hive.version>
         <commons-codec.version>1.14</commons-codec.version>
 
         <fastjson.version>1.2.47</fastjson.version>
