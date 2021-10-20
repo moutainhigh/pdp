@@ -133,7 +133,7 @@ CREATE TABLE `au_login_log` (
   `time` datetime DEFAULT NULL COMMENT '登录时间',
   `description` varchar(200) DEFAULT NULL COMMENT '描述信息',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='用户登录日志表';
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='用户登录日志表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -226,7 +226,7 @@ CREATE TABLE `au_role` (
   `update_user_id` int(11) DEFAULT NULL COMMENT '更新人ID',
   `update_time` datetime DEFAULT NULL COMMENT '系统时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='角色信息';
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='角色信息';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -252,7 +252,7 @@ CREATE TABLE `au_role_auth` (
   `auth_id` int(11) NOT NULL COMMENT '权限id',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_role_id_auth_id` (`role_id`,`auth_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8 COMMENT='角色权限信息表';
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='角色权限信息表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -318,7 +318,7 @@ CREATE TABLE `au_user` (
   `update_user_id` int(11) DEFAULT NULL COMMENT '更新信息的用户id',
   `update_time` datetime DEFAULT NULL COMMENT '更新的时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COMMENT='用户账号信息';
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='用户账号信息';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -346,7 +346,7 @@ CREATE TABLE `au_user_role` (
   `create_time` datetime DEFAULT NULL COMMENT '分配时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_user_id_role_id` (`user_id`,`role_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COMMENT='用户角色信息表';
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='用户角色信息表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -369,17 +369,17 @@ DROP TABLE IF EXISTS `data_sources_info`;
 CREATE TABLE `data_sources_info` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `data_source_context` varchar(100) DEFAULT NULL COMMENT '数据源说明',
-  `data_source_type` varchar(100) DEFAULT NULL COMMENT '数据源类型',
+  `data_source_type` int DEFAULT NULL COMMENT '数据源类型',
   `driver` varchar(100) DEFAULT NULL COMMENT '驱动连接串',
   `url` varchar(100) DEFAULT NULL COMMENT '连接url',
   `username` varchar(100) DEFAULT NULL COMMENT '用户名',
   `password` varchar(100) DEFAULT NULL COMMENT '密码',
-  `create_user_id` int(11) DEFAULT NULL COMMENT '创建信息的用户id',
-  `update_user_id` int(11) DEFAULT NULL COMMENT '修改信息的用户id',
-  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建的时间',
-  `update_time` datetime DEFAULT NULL COMMENT '更新的时间',
+  `create_user_id` int(11) DEFAULT NULL COMMENT '创建信息用户id',
+  `update_user_id` int(11) DEFAULT NULL COMMENT '修改信息用户id',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -403,7 +403,7 @@ CREATE TABLE `data_sources_type_info` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `sources_type` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -415,6 +415,36 @@ LOCK TABLES `data_sources_type_info` WRITE;
 INSERT INTO `data_sources_type_info` VALUES (1,'JDBC'),(2,'HIVE'),(3,'HDFS'),(4,'HBASE'),(5,'ES'),(6,'KAFKA'),(7,'HTTP'),(8,'REDIS');
 /*!40000 ALTER TABLE `data_sources_type_info` ENABLE KEYS */;
 UNLOCK TABLES;
+
+DROP TABLE IF EXISTS `gather_dolphin_info`;
+CREATE TABLE `gather_dolphin_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `gather_job_id` varchar(200) NOT NULL COMMENT '任务id',
+  `gather_context` varchar(200) DEFAULT NULL COMMENT '任务说明',
+  `datasource_input` int(11) NOT NULL COMMENT '输入数据源ID',
+  `database_name_input` varchar(255) NOT NULL  COMMENT '输入数据源数据库',
+  `table_name` varchar(255) NOT NULL  COMMENT '输入数据源表名',
+  `datasource_output` int(11) NOT NULL COMMENT '输出数据源ID',
+  `sync_type` int NOT NULL COMMENT '数据同步方式',
+  `datasource_dolphin` int(11) NOT NULL COMMENT 'dolphin源',
+  `dolphin_project_name` varchar(255) NOT NULL COMMENT 'dolphin项目名',
+  `create_hive_table` boolean DEFAULT false COMMENT '是否创建表',
+  `is_online` boolean DEFAULT false COMMENT '上线dolphin任务',
+  `crontab` varchar(255) NOT NULL COMMENT '定时',
+  `gather_job_info` text DEFAULT NULL COMMENT 'dolphin任务配置',
+  `create_user_id` int(11) NOT NULL COMMENT '创建信息用户id',
+  `update_user_id` int(11) NOT NULL COMMENT '修改信息用户id',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `gather_type_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `sync_type` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
+insert into `gather_type_info` values (1,'全量'),(2,'增量'),(3,'每日快照');
 
 
 
@@ -522,6 +552,21 @@ INSERT INTO `job_lock` ( `lock_name`) VALUES ( 'schedule_lock');
 commit;
 
 
+--数据校验表 etl.pdp_data_check
+--CREATE TABLE `etl.pdp_data_check` (
+--  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+--  `gather_job_id` varchar(200) NOT NULL COMMENT '任务id',
+--  `dbname_input` varchar(255) NOT NULL  COMMENT '输入数据源数据库',
+--  `tablename_input` varchar(255) NOT NULL  COMMENT '输入数据源表名',
+--  `dbname_output` varchar(255) NOT NULL  COMMENT '输出数据源数据库',
+--  `tablename_output` varchar(255) NOT NULL  COMMENT '输出数据源表名',
+--  `input_datasource_count` int(11) NOT NULL COMMENT '输入数据源count',
+--  `output_datasource_count` int(11) NOT NULL COMMENT '输出数据源count',
+--  `sync_type` varchar(255) NOT NULL COMMENT '同步类型',
+--  `create_time` timestamp NOT NULL COMMENT '创建时间',
+--  `update_time` datetime NOT NULL COMMENT '更新时间',
+--  PRIMARY KEY (`id`)
+--) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 --

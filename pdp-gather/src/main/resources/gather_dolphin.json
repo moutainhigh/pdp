@@ -1,0 +1,296 @@
+{
+  "processDefinitionJson": {
+    "globalParams": [
+      {
+        "prop":"global_start_time",
+        "direct":"IN",
+        "type":"VARCHAR",
+        "value":"date_sub(current_date(),interval 1 day)"
+      },
+      {
+        "prop":"global_end_time",
+        "direct":"IN",
+        "type":"VARCHAR",
+        "value":"current_date()"
+      }
+    ],
+    "tasks": [
+      {
+        "conditionResult": {
+          "successNode": [
+            ""
+          ],
+          "failedNode": [
+            ""
+          ]
+        },
+        "description": "清空stg",
+        "runFlag": "NORMAL",
+        "type": "SQL",
+        "params": {
+          "postStatements": [
+          ],
+          "connParams": "",
+          "receiversCc": "",
+          "udfs": "",
+          "type": "HIVE",
+          "title": "",
+          "sql": "33333333333333",
+          "preStatements": [
+          ],
+          "sqlType": "1",
+          "sendEmail": false,
+          "receivers": "",
+          "datasource": 111122222,
+          "displayRows": 10,
+          "showType": "TABLE",
+          "localParams": [
+          ],
+          "datasourceName": "444444444444"
+        },
+        "timeout": {
+          "enable": false,
+          "strategy": ""
+        },
+        "maxRetryTimes": "0",
+        "taskInstancePriority": "MEDIUM",
+        "name": "truncate stg",
+        "dependence": {
+        },
+        "retryInterval": "1",
+        "preTasks": [
+        ],
+        "id": "tasks-62760",
+        "workerGroup": "datax"
+      },
+      {
+        "conditionResult": {
+          "successNode": [
+            ""
+          ],
+          "failedNode": [
+            ""
+          ]
+        },
+        "description": "stg同步到ods",
+        "runFlag": "NORMAL",
+        "type": "SQL",
+        "params": {
+          "postStatements": [
+          ],
+          "connParams": "",
+          "receiversCc": "",
+          "udfs": "",
+          "type": "HIVE",
+          "title": "",
+          "sql": "555555555555",
+          "preStatements": [
+          ],
+          "sqlType": "1",
+          "sendEmail": false,
+          "receivers": "",
+          "datasource": 111122222,
+          "displayRows": 10,
+          "showType": "TABLE",
+          "localParams": [
+          ],
+          "datasourceName": "444444444444"
+        },
+        "timeout": {
+          "enable": false,
+          "strategy": ""
+        },
+        "maxRetryTimes": "0",
+        "taskInstancePriority": "MEDIUM",
+        "name": "stg2ods",
+        "dependence": {
+        },
+        "retryInterval": "1",
+        "preTasks": [
+          "mysql2stg"
+        ],
+        "id": "tasks-20912",
+        "workerGroup": "datax"
+      },
+      {
+        "conditionResult": {
+          "successNode": [
+            ""
+          ],
+          "failedNode": [
+            ""
+          ]
+        },
+        "description": "mysql同步到stg",
+        "runFlag": "NORMAL",
+        "type": "DATAX",
+        "params": {
+          "customConfig": 1,
+          "json": "111111111111111",
+          "localParams": [
+            {
+              "prop":"start_time",
+              "direct":"IN",
+              "type":"VARCHAR",
+              "value":"${global_start_time}"
+            },
+            {
+              "prop":"end_time",
+              "direct":"IN",
+              "type":"VARCHAR",
+              "value":"${global_end_time}"
+            }
+          ]
+        },
+        "timeout": {
+          "strategy": "",
+          "interval": null,
+          "enable": false
+        },
+        "maxRetryTimes": "0",
+        "taskInstancePriority": "MEDIUM",
+        "name": "mysql2stg",
+        "dependence": {
+        },
+        "retryInterval": "1",
+        "preTasks": [
+          "truncate stg"
+        ],
+        "id": "tasks-29518",
+        "workerGroup": "datax"
+      },
+      {
+        "conditionResult": {
+          "successNode": [
+            ""
+          ],
+          "failedNode": [
+            ""
+          ]
+        },
+        "description": "刷新impala元数据",
+        "runFlag": "NORMAL",
+        "type": "SHELL",
+        "params": {
+          "resourceList": [
+          ],
+          "localParams": [
+          ],
+          "rawScript": "2222222222"
+        },
+        "timeout": {
+          "strategy": "",
+          "interval": null,
+          "enable": false
+        },
+        "maxRetryTimes": 2,
+        "taskInstancePriority": "MEDIUM",
+        "name": "invalidate metadata",
+        "dependence": {
+        },
+        "retryInterval": "1",
+        "preTasks": [
+          "stg2ods"
+        ],
+        "id": "tasks-85595",
+        "workerGroup": "datax"
+      },
+      {
+        "type": "SHELL",
+        "id": "tasks-47448",
+        "name": "check data",
+        "params": {
+          "resourceList": [
+          ],
+          "localParams": [
+          ],
+          "rawScript": "6666666666666"
+        },
+        "description": "数据校验",
+        "timeout": {
+          "strategy": "",
+          "interval": null,
+          "enable": false
+        },
+        "runFlag": "NORMAL",
+        "conditionResult": {
+          "successNode": [
+            ""
+          ],
+          "failedNode": [
+            ""
+          ]
+        },
+        "dependence": {
+        },
+        "maxRetryTimes": "0",
+        "retryInterval": "1",
+        "taskInstancePriority": "MEDIUM",
+        "workerGroup": "datax",
+        "preTasks": [
+          "invalidate metadata"
+        ]
+      }
+    ],
+    "tenantId": 111111111222222,
+    "timeout": 0
+  },
+  "locations": {
+    "tasks-62760": {
+      "name": "truncate stg",
+      "targetarr": "",
+      "nodenumber": "1",
+      "x": 221,
+      "y": 168
+    },
+    "tasks-20912": {
+      "name": "stg2ods",
+      "targetarr": "tasks-29518",
+      "nodenumber": "1",
+      "x": 476,
+      "y": 346
+    },
+    "tasks-29518": {
+      "name": "mysql2stg",
+      "targetarr": "tasks-62760",
+      "nodenumber": "1",
+      "x": 347,
+      "y": 261
+    },
+    "tasks-85595": {
+      "name": "invalidate metadata",
+      "targetarr": "tasks-20912",
+      "nodenumber": "1",
+      "x": 616,
+      "y": 409
+    },
+    "tasks-47448": {
+      "name": "check data",
+      "targetarr": "tasks-85595",
+      "nodenumber": "0",
+      "x": 786,
+      "y": 488
+    }
+  },
+  "connects": [
+    {
+      "endPointSourceId": "tasks-62760",
+      "endPointTargetId": "tasks-29518"
+    },
+    {
+      "endPointSourceId": "tasks-29518",
+      "endPointTargetId": "tasks-20912"
+    },
+    {
+      "endPointSourceId": "tasks-20912",
+      "endPointTargetId": "tasks-85595"
+    },
+    {
+      "endPointSourceId": "tasks-85595",
+      "endPointTargetId": "tasks-47448"
+    }
+  ],
+  "name": "7777777777777777",
+  "description": "88888888888",
+  "projectName": "999999999"
+}

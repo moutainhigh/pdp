@@ -1,6 +1,7 @@
 package com.pd.pdp.server.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.pd.pdp.gather.utils.Base64Util;
 import com.pd.pdp.server.base.Request;
 import com.pd.pdp.server.base.Result;
 import com.pd.pdp.server.base.ResultGenerator;
@@ -39,12 +40,20 @@ public class DataSourcesController {
     DataSourcesService dataSourcesServiceImpl;
 
 
-    @ApiOperation(value = "获取当前用户下的所有数据源")
+    @ApiOperation(value = "分页获取当前用户下的数据源")
     @PostMapping(value = "/data_sources_list")
-    public Result<PageDTO<DataSourcesInfo>> data_sources_list(@RequestBody Request<PageVO<DatasourcePageVO>> request) {
+    public Result<PageDTO<DataSourcesInfo>> dataSourcesList(@RequestBody Request<PageVO<DatasourcePageVO>> request) {
 
         PageDTO<DataSourcesInfo> dataSourcesInfos = dataSourcesServiceImpl.findByCondition(request.getData(), request.getUserId());
         return ResultGenerator.getSuccessResult(dataSourcesInfos);
+    }
+
+    @ApiOperation(value = "获取所有数据源")
+    @PostMapping(value = "/data_sources_all")
+    public Result<List<DataSourcesInfo>> dataSourcesAll(@RequestBody Request request) {
+
+        List<DataSourcesInfo> dataSourcesAll = dataSourcesServiceImpl.selectAll();
+        return ResultGenerator.getSuccessResult(dataSourcesAll);
     }
 
 
@@ -70,10 +79,11 @@ public class DataSourcesController {
 
     @ApiOperation(value = "新增数据源")
     @PostMapping(value = "/add_data_sources")
-    public Result add_data_sources(@RequestBody Request<JSONObject> request) {
+    public Result addDataSources(@RequestBody Request<JSONObject> request) {
         DataSourcesInfo dataSourcesInfo = JSONObject.parseObject(request.getData().toString(), DataSourcesInfo.class);
         dataSourcesInfo.setCreateUserId(request.getUserId());
         dataSourcesInfo.setUpdateUserId(request.getUserId());
+        dataSourcesInfo.setPassword(Base64Util.getBase64(dataSourcesInfo.getPassword()));
         dataSourcesInfo.setCreateTime(new Timestamp(System.currentTimeMillis()));
         dataSourcesInfo.setUpdateTime(new Timestamp(System.currentTimeMillis()));
         dataSourcesServiceImpl.insert(dataSourcesInfo);
@@ -84,9 +94,17 @@ public class DataSourcesController {
 
     @ApiOperation(value = "更新数据源")
     @PostMapping("/data_sources_update")
-    public Result data_sources_update(@RequestBody Request<DataSourcesInfo> request) {
+    public Result dataSourcesUpdate(@RequestBody Request<DataSourcesInfo> request) {
         DataSourcesInfo dataSourcesInfo = request.getData();
-        dataSourcesInfo.setCreateUserId(request.getUserId());
+        dataSourcesInfo.setUpdateUserId(request.getUserId());
+        String basePassword = dataSourcesInfo.getPassword();
+
+        DataSourcesInfo dataSourcesInfoStore = dataSourcesServiceImpl.selectById(request.getData().getId());
+        if (!dataSourcesInfoStore.getPassword().equals(basePassword)) {
+            //不一致加密
+            dataSourcesInfo.setPassword(Base64Util.getBase64(basePassword));
+        }
+
         dataSourcesInfo.setUpdateTime(new Timestamp(System.currentTimeMillis()));
         dataSourcesServiceImpl.update(dataSourcesInfo);
 
@@ -96,10 +114,44 @@ public class DataSourcesController {
 
     @ApiOperation(value = "获取所有的数据源类型")
     @PostMapping(value = "/data_sources_type")
-    public Result<List<DataSourcesTypeInfo>> data_sources_type() {
+    public Result<List<DataSourcesTypeInfo>> dataSourcesType() {
         List<DataSourcesTypeInfo> result = dataSourcesServiceImpl.selectDataSourcesType();
 
         return ResultGenerator.getSuccessResult(result);
+    }
+
+    @ApiOperation(value = "测试添加数据源连接")
+    @PostMapping(value = "/test_add_conn")
+    public Result testAddConn(@RequestBody Request<DataSourcesInfo> request) {
+        DataSourcesInfo dataSourcesInfo = request.getData();
+        dataSourcesInfo.setPassword(Base64Util.getBase64(dataSourcesInfo.getPassword()));
+
+        boolean testConn = dataSourcesServiceImpl.testConn(dataSourcesInfo);
+        if (testConn) {
+            return ResultGenerator.getSuccessResult();
+        }
+
+       return  ResultGenerator.getFailResult("连接失败，请检查参数！");
+    }
+
+
+    @ApiOperation(value = "测试修改数据源连接")
+    @PostMapping(value = "/test_edit_conn")
+    public Result testEditConn(@RequestBody Request<DataSourcesInfo> request) {
+        DataSourcesInfo dataSourcesInfo = request.getData();
+        String basePassword = dataSourcesInfo.getPassword();
+        DataSourcesInfo dataSourcesInfoStore = dataSourcesServiceImpl.selectById(request.getData().getId());
+        if (!dataSourcesInfoStore.getPassword().equals(basePassword)) {
+            //不一致加密
+            dataSourcesInfo.setPassword(Base64Util.getBase64(basePassword));
+        }
+
+        boolean testConn = dataSourcesServiceImpl.testConn(dataSourcesInfo);
+        if (testConn) {
+            return ResultGenerator.getSuccessResult();
+        }
+
+        return  ResultGenerator.getFailResult("连接失败，请检查参数！");
     }
 
 }

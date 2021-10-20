@@ -13,12 +13,7 @@ import com.pd.notscan.BaseMapper;
 
 import java.util.List;
 
-/**
- * ClassName: DataSourcesMapper
- *
- * @author zyc-admin
- * @Description:
- */
+
 @Mapper
 @Repository
 public interface DataSourcesMapper extends BaseMapper<DataSourcesInfo> {
@@ -28,6 +23,9 @@ public interface DataSourcesMapper extends BaseMapper<DataSourcesInfo> {
 
     @Select(value = "select id,sources_type from data_sources_type_info")
     public List<DataSourcesTypeInfo> selectDataSourcesType();
+
+    @Select(value = "select sources_type from data_sources_type_info where id = ${id}")
+    public DataSourcesTypeInfo selectDataSourcesTypeById(int id);
 
 
     @Select({"<script>",

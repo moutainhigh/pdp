@@ -1,5 +1,6 @@
 package com.pd.pdp.server.service.impl;
 
+import com.pd.pdp.gather.server.GatherDolphinServer;
 import com.pd.pdp.server.dto.PageDTO;
 import com.pd.pdp.server.entity.DataSourcesInfo;
 import com.pd.pdp.server.entity.DataSourcesTypeInfo;
@@ -18,6 +19,9 @@ public class DataSourcesServiceImpl implements DataSourcesService {
 
     @Autowired
     DataSourcesMapper dataSourcesMapper;
+
+    @Autowired
+    GatherDolphinServer gatherDolphinServer;
 
 
     @Override
@@ -69,12 +73,11 @@ public class DataSourcesServiceImpl implements DataSourcesService {
     }
 
     @Override
-    public int deleteBatchById(List<String> ids) {
+    public void deleteBatchById(List<String> ids) {
         for (String id : ids) {
             dataSourcesMapper.deleteBatchById(id);
         }
 
-        return 0;
     }
 
     @Override
@@ -85,6 +88,14 @@ public class DataSourcesServiceImpl implements DataSourcesService {
     @Override
     public List<DataSourcesTypeInfo> selectDataSourcesType() {
         return dataSourcesMapper.selectDataSourcesType();
+    }
+
+    @Override
+    public boolean testConn(DataSourcesInfo dataSourcesInfo) {
+        int dataSourceTypeId = dataSourcesInfo.getDataSourceType();
+        DataSourcesTypeInfo dataSourcesTypeInfo = dataSourcesMapper.selectDataSourcesTypeById(dataSourceTypeId);
+        String dataSourceType = dataSourcesTypeInfo.getSourcesType();
+        return gatherDolphinServer.testConn(dataSourcesInfo.getDriver(), dataSourcesInfo.getUrl(), dataSourcesInfo.getUsername(), dataSourcesInfo.getPassword(), dataSourceType);
     }
 
 }

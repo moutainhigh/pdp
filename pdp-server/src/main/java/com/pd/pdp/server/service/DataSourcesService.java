@@ -9,12 +9,6 @@ import com.pd.pdp.server.vo.PageVO;
 
 import java.util.List;
 
-/**
- * ClassName: DataSourcesService
- *
- * @author zyc-admin
- * @Description:
- */
 public interface DataSourcesService {
 
     public DataSourcesInfo selectById(int id);
@@ -31,10 +25,12 @@ public interface DataSourcesService {
 
     public List<DataSourcesInfo> selectAll();
 
-    public int deleteBatchById(List<String> ids);
+    public void deleteBatchById(List<String> ids);
 
     public List<DataSourcesInfo> select(DataSourcesInfo dataSourcesInfo);
 
     public List<DataSourcesTypeInfo> selectDataSourcesType();
+
+    public boolean testConn(DataSourcesInfo dataSourcesInfo);
 
 }
