@@ -28,7 +28,7 @@ spring:
             class: javax.net.ssl.SSLSocketFactory
   # 数据源配置，请修改为你项目的实际配置
   datasource:
-    url: jdbc:mysql://localhost:3306/pdp_db?serverTimezone=GMT%2B8
+    url: jdbc:mysql://localhost:3306/pdp_db?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=UTF-8
     username: root
     password: root
     driver-class-name: com.mysql.jdbc.Driver
