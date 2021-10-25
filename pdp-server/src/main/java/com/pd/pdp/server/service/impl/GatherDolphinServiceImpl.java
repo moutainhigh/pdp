@@ -147,6 +147,7 @@ public class GatherDolphinServiceImpl implements GatherDolphinService {
             gatherDolphinJobEntity.setGatherJobId(gatherDolphinInfo.getGatherJobId());
 
             //input data
+            gatherDolphinJobEntity.setSystemName(dataSourcesInfoInput.getSystemName());
             gatherDolphinJobEntity.setDriverInput(dataSourcesInfoInput.getDriver());
             gatherDolphinJobEntity.setUrlInput(dataSourcesInfoInput.getUrl());
             gatherDolphinJobEntity.setUsernameInput(dataSourcesInfoInput.getUsername());
@@ -202,6 +203,7 @@ public class GatherDolphinServiceImpl implements GatherDolphinService {
             gatherDolphinJobEntity.setGatherJobId(gatherDolphinInfo.getGatherJobId());
 
             //input data
+            gatherDolphinJobEntity.setSystemName(dataSourcesInfoInput.getSystemName());
             gatherDolphinJobEntity.setDriverInput(dataSourcesInfoInput.getDriver());
             gatherDolphinJobEntity.setUrlInput(dataSourcesInfoInput.getUrl());
             gatherDolphinJobEntity.setUsernameInput(dataSourcesInfoInput.getUsername());
@@ -231,7 +233,7 @@ public class GatherDolphinServiceImpl implements GatherDolphinService {
             gatherDolphinJobEntity.setCrontab(gatherDolphinInfo.getCrontab());
 
             onlineResponse = gatherDolphinServer.createJobByTemplate(gatherDolphinJobEntity);
-            if (JSONObject.parseObject(onlineResponse).getInteger(Constant.CODE) == 0) {
+            if (onlineResponse != null && JSONObject.parseObject(onlineResponse).getInteger(Constant.CODE) == 0) {
                 gatherDolphinInfo.setUpdateTime(new Timestamp(System.currentTimeMillis()));
                 gatherDolphinMapper.updateByPrimaryKey(gatherDolphinInfo);
             }
@@ -261,6 +263,7 @@ public class GatherDolphinServiceImpl implements GatherDolphinService {
             gatherDolphinJobEntity.setGatherJobId(gatherDolphinInfo.getGatherJobId());
 
             //input data
+            gatherDolphinJobEntity.setSystemName(dataSourcesInfoInput.getSystemName());
             gatherDolphinJobEntity.setDatabaseNameInput(gatherDolphinInfo.getDatabaseNameInput());
             gatherDolphinJobEntity.setTableNameInput(gatherDolphinInfo.getTableName());
 

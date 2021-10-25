@@ -17,6 +17,7 @@ public class DataSourcesInfo implements Serializable {
     @Id
     @Column(name = "id")
     private int id;
+    private String systemName;
     private String dataSourceContext;
     private int dataSourceType;
     private String driver;

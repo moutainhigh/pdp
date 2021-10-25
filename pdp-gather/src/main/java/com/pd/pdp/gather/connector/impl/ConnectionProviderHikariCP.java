@@ -281,7 +281,7 @@ public class ConnectionProviderHikariCP implements ConnectionProvider {
         return rtn;
     }
 
-    public boolean exec(String sql) {
+    public boolean exec(String sql) throws SQLException {
         Connection conn = null;
         boolean execute = false;
         Statement statement = null;
@@ -291,6 +291,7 @@ public class ConnectionProviderHikariCP implements ConnectionProvider {
             execute = statement.execute(sql);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
+            throw new SQLException(e);
         } finally {
             try {
                 if (statement != null) {

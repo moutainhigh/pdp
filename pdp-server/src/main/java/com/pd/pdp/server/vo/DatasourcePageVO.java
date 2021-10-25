@@ -17,8 +17,8 @@ public class DatasourcePageVO {
     @ApiModelProperty("数据源说明")
     private String dataSourceContext;
 
-    @ApiModelProperty("连接串")
-    private String url;
+    @ApiModelProperty("系统名称")
+    private String systemName;
 
     @ApiModelProperty("数据源")
     private String dataSourceType;

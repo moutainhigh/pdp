@@ -69,6 +69,7 @@ public interface Constant {
     String RAW_SCRIPT = "rawScript";
     String TRUNCATE_TABLE = "truncate table %s.%s";
 
+    String SYSTEM_NAME = "systemName";
     String DATABASE_NAME_INPUT = "databaseNameInput";
     String TABLE_NAME_INPUT = "tableNameInput";
     String IP_INPUT = "ipInput";

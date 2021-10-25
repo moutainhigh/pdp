@@ -179,7 +179,7 @@ public class GatherDolphinController {
         }
 
         String response = gatherDolphinServiceImpl.createJobByTemplate(ids);
-        if (JSONObject.parseObject(response).getInteger(Constant.CODE) == 0) {
+        if (response != null && JSONObject.parseObject(response).getInteger(Constant.CODE) == 0) {
             return ResultGenerator.getSuccessResult();
         }
 

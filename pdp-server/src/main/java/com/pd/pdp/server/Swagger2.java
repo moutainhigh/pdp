@@ -52,9 +52,9 @@ public class Swagger2 {
                 //描述
                 .description("pdp大数据平台使用Swagger2构建RESTful APIs")
                 //服务地址
-                .termsOfServiceUrl("http://localhost:8807")
+                .termsOfServiceUrl("http://localhost:8084")
                 //创建人
-                .contact(new Contact("pdp", "http://localhost:8807/doc.html", "18208985395@163.com"))
+                .contact(new Contact("pdp", "http://localhost:8084/doc.html", "18208985395@163.com"))
                 //版本号
                 .version("1.0")
                 .build();

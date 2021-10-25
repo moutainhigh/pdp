@@ -51,8 +51,8 @@ public class DolphinRequest {
         String partitionColName = gatherProperties.getHiveOdsPartitionCol().split(Constant.BACK_QUOTE)[1].trim();
         String dolphinProjectName = gatherDolphinJobEntity.getDolphinProjectName();
 
-        String stgTableName = gatherDolphinJobEntity.getDatabaseNameInput() + Constant.UNDERLINE + gatherDolphinJobEntity.getTableNameInput() + Constant.UNDERLINE + gatherProperties.getHiveStgTableLastFix();
-        String odsTableName = gatherDolphinJobEntity.getDatabaseNameInput() + Constant.UNDERLINE + gatherDolphinJobEntity.getTableNameInput() + Constant.UNDERLINE + gatherProperties.getHiveOdsTableLastFix();
+        String stgTableName = gatherDolphinJobEntity.getSystemName() + Constant.UNDERLINE + gatherDolphinJobEntity.getDatabaseNameInput() + Constant.UNDERLINE + gatherDolphinJobEntity.getTableNameInput() + Constant.UNDERLINE + gatherProperties.getHiveStgTableLastFix();
+        String odsTableName = gatherDolphinJobEntity.getSystemName() + Constant.UNDERLINE + gatherDolphinJobEntity.getDatabaseNameInput() + Constant.UNDERLINE + gatherDolphinJobEntity.getTableNameInput() + Constant.UNDERLINE + gatherProperties.getHiveOdsTableLastFix();
 
         String name = odsTableName + Constant.UNDERLINE + gatherDolphinJobEntity.getGatherJobId();
         ;
@@ -168,12 +168,15 @@ public class DolphinRequest {
         if (port.contains(Constant.BACKSLASH)) {
             port = port.substring(0, port.indexOf(Constant.BACKSLASH));
         } else {
-            port = port.substring(0, port.indexOf(Constant.QUESTION));
+            if (port.contains(Constant.QUESTION)) {
+                port = port.substring(0, port.indexOf(Constant.QUESTION));
+            }
         }
 
         String dolphinCheckDataShell = gatherProperties.getDolphinCheckDataShell();
 
         dolphinCheckDataShell = dolphinCheckDataShell
+                .replace(Constant.SYSTEM_NAME, gatherDolphinJobEntity.getSystemName())
                 .replace(Constant.DATABASE_NAME_INPUT, gatherDolphinJobEntity.getDatabaseNameInput())
                 .replace(Constant.TABLE_NAME_INPUT, gatherDolphinJobEntity.getTableNameInput()).replace(Constant.IP_INPUT, ip)
                 .replace(Constant.PORT_INPUT, port)

@@ -30,6 +30,18 @@ public interface PlatformLinkService {
      **/
     public List<PlatformInfo> findAllByStatus();
 
+
+    /**
+     * @Author pdp
+     * @Description 查询报表看板url信息
+     * @Param [id]
+     * @return void
+     **/
+    public List<PlatformInfo> findAllReportBoardByStatus();
+
+
+
+
     /**
      * @Author pdp
      * @Description 根据名称查询平台url信息

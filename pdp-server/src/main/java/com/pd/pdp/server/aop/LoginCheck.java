@@ -52,23 +52,24 @@ public class LoginCheck {
             // 密码不能为空
             return ResultGenerator.getFailResult("密码不能为空");
         }
-        if (StringUtil.isEmpty(loginVO.getCode(), true) || StringUtil.isEmpty(loginVO.getPCode(), true)) {
-            // 验证信息不能为空
-            return ResultGenerator.getFailResult("验证信息不能为空");
-        }
-        if (redisUtil.get(loginVO.getPCode()) == null) {
-            // 验证码过期
-            return ResultGenerator.getFailResult("验证码过期，请重新获取");
-        }
-        if (!loginVO.getCode().toUpperCase().equals(redisUtil.get(loginVO.getPCode()).toString().toUpperCase())) {
-            // 验证码强制过期
-            redisUtil.del(loginVO.getPCode());
-            // 验证码错误
-            return ResultGenerator.getFailResult("验证码错误，请重新输入");
-        }
+        //关闭验证码
+//        if (StringUtil.isEmpty(loginVO.getCode(), true) || StringUtil.isEmpty(loginVO.getPCode(), true)) {
+//            // 验证信息不能为空
+//            return ResultGenerator.getFailResult("验证信息不能为空");
+//        }
+//        if (redisUtil.get(loginVO.getPCode()) == null) {
+//            // 验证码过期
+//            return ResultGenerator.getFailResult("验证码过期，请重新获取");
+//        }
+//        if (!loginVO.getCode().toUpperCase().equals(redisUtil.get(loginVO.getPCode()).toString().toUpperCase())) {
+//            // 验证码强制过期
+//            redisUtil.del(loginVO.getPCode());
+//            // 验证码错误
+//            return ResultGenerator.getFailResult("验证码错误，请重新输入");
+//        }
 
         //验证码强制过期
-        redisUtil.del(loginVO.getPCode());
+//        redisUtil.del(loginVO.getPCode());
         return pjp.proceed();
     }
 }

@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -292,14 +293,18 @@ public class GatherDolphinServer {
     public boolean createHiveTable(GatherDolphinJobEntity gatherDolphinJobEntity) {
         logger.info("start exec createHiveTable...");
 
+        HashMap<String, String> hiveTableSqls = metaDataConvert.createHiveTableMeta(gatherDolphinJobEntity);
+        gatherDolphinJobEntity.setHiveTableSqls(hiveTableSqls);
+
         //create hive table
         if (gatherDolphinJobEntity.isCreateHiveTable()) {
-            HashMap<String, String> hiveTableSqls = metaDataConvert.createHiveTableMeta(gatherDolphinJobEntity);
-            gatherDolphinJobEntity.setHiveTableSqls(hiveTableSqls);
-
             ConnectionProviderHikariCP connOfOutputDS = gatherConnector.getConnInPool(gatherDolphinJobEntity.getDriverOutput(), gatherDolphinJobEntity.getUrlOutput(), gatherDolphinJobEntity.getUsernameOutput(), gatherDolphinJobEntity.getPasswordOutput());
-            connOfOutputDS.exec(hiveTableSqls.get(Constant.STG));
-            connOfOutputDS.exec(hiveTableSqls.get(Constant.ODS));
+            try {
+                connOfOutputDS.exec(hiveTableSqls.get(Constant.STG));
+                connOfOutputDS.exec(hiveTableSqls.get(Constant.ODS));
+            } catch (SQLException throwables) {
+                return false;
+            }
         }
         return true;
     }

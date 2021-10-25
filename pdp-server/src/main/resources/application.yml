@@ -13,4 +13,4 @@ spring:
   logging: debug
 # 应用服务 WEB 访问端口
 server:
-    port: 8807
+    port: 8084

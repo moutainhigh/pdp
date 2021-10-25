@@ -35,10 +35,10 @@ public interface DataSourcesMapper extends BaseMapper<DataSourcesInfo> {
             "AND data_source_context like '%${pageVO.data.dataSourceContext}%'",
             "</when>",
             "<when test='pageVO.data.dataSourceType!=null and pageVO.data.dataSourceType !=\"\"'>",
-            "AND data_source_type = #{pageVO.data.dataSourceType}",
+            "AND data_source_type like '%${pageVO.data.dataSourceType}%'",
             "</when>",
-            "<when test='pageVO.data.url!=null and pageVO.data.url !=\"\"'>",
-            "AND url like '%${pageVO.data.url}%'",
+            "<when test='pageVO.data.systemName!=null and pageVO.data.systemName !=\"\"'>",
+            "AND system_name like '%${pageVO.data.systemName}%'",
             "</when>",
             "</script>"})
     public Integer selectDatasourcesCount(@Param("pageVO") PageVO<DatasourcePageVO> pageVO, @Param("createUserId") int createUserId);
@@ -51,10 +51,10 @@ public interface DataSourcesMapper extends BaseMapper<DataSourcesInfo> {
             "AND data_source_context like '%${pageVO.data.dataSourceContext}%'",
             "</when>",
             "<when test='pageVO.data.dataSourceType!=null and pageVO.data.dataSourceType !=\"\"'>",
-            "AND data_source_type = #{pageVO.data.dataSourceType}",
+            "AND data_source_type like '%${pageVO.data.dataSourceType}%'",
             "</when>",
-            "<when test='pageVO.data.url!=null and pageVO.data.url !=\"\"'>",
-            "AND url like '%${pageVO.data.url}%'",
+            "<when test='pageVO.data.systemName!=null and pageVO.data.systemName !=\"\"'>",
+            "AND system_name like '%${pageVO.data.systemName}%'",
             "</when>",
             "LIMIT #{pageVO.dbIndex,jdbcType=INTEGER},#{pageVO.dbNumber,jdbcType=INTEGER}",
             "</script>"})

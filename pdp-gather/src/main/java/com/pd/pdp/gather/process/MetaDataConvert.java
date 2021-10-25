@@ -83,7 +83,7 @@ public class MetaDataConvert {
         switch (whichDB) {
             case Constant.STG:
                 String hiveStgTableLastFix = gatherProperties.getHiveStgTableLastFix();
-                tableName = db + Constant.UNDERLINE + tableNameInput + Constant.UNDERLINE + hiveStgTableLastFix;
+                tableName = gatherDolphinJobEntity.getSystemName() + Constant.UNDERLINE + db + Constant.UNDERLINE + tableNameInput + Constant.UNDERLINE + hiveStgTableLastFix;
                 String hiveStgTableType = gatherProperties.getHiveStgTableType();
                 String hiveStgCompressionType = gatherProperties.getHiveStgCompressionType();
                 String hiveStgTablePath = gatherProperties.getHiveStgTablePath();
@@ -110,7 +110,7 @@ public class MetaDataConvert {
                 break;
             case Constant.ODS:
                 String hiveOdsTableLastFix = gatherProperties.getHiveOdsTableLastFix();
-                tableName = db + Constant.UNDERLINE + tableNameInput + Constant.UNDERLINE + hiveOdsTableLastFix;
+                tableName = gatherDolphinJobEntity.getSystemName() + Constant.UNDERLINE + db + Constant.UNDERLINE + tableNameInput + Constant.UNDERLINE + hiveOdsTableLastFix;
                 String hiveOdsTableType = gatherProperties.getHiveOdsTableType();
                 String hiveOdsCompressionType = gatherProperties.getHiveOdsCompressionType();
                 String hiveOdsTablePath = gatherProperties.getHiveOdsTablePath();
@@ -227,7 +227,7 @@ public class MetaDataConvert {
         }
         json = json.replace("$fileType", fileType);
 
-        String fileName = db + Constant.UNDERLINE + tableName + Constant.UNDERLINE + gatherProperties.getHiveStgTableLastFix();
+        String fileName = gatherDolphinJobEntity.getSystemName() + Constant.UNDERLINE + db + Constant.UNDERLINE + tableName + Constant.UNDERLINE + gatherProperties.getHiveStgTableLastFix();
         json = json.replace("$fileName", fileName);
 
         json = json.replace("$path", gatherProperties.getHiveStgTablePath() + Constant.BACKSLASH + fileName);

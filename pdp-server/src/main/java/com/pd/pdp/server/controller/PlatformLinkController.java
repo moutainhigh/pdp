@@ -37,12 +37,18 @@ public class PlatformLinkController {
         PlatformInfo platformInfo = JSONObject.parseObject(request.getData().getJSONObject("data").toString(), PlatformInfo.class);
         List<PlatformInfo> platformLinkList = null;
         String name = platformInfo.getName();
-        if( name == null) {
+        if (name == null) {
             platformLinkList = platformLinkService.findAllByStatus();
         } else {
             platformLinkList = platformLinkService.findByName(name);
         }
-        System.out.println(platformLinkList);
+        return ResultGenerator.getSuccessResult(platformLinkList);
+    }
+
+    @ApiOperation(value = "获取报表看板url")
+    @PostMapping(value = "/report_board_list")
+    public Result<List<PlatformInfo>> reportBoardList(@RequestBody Request<JSONObject> request) {
+        List<PlatformInfo> platformLinkList = platformLinkService.findAllReportBoardByStatus();
         return ResultGenerator.getSuccessResult(platformLinkList);
     }
 

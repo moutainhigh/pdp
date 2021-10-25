@@ -29,6 +29,11 @@ public class PlatformLinkServiceImp implements PlatformLinkService {
     }
 
     @Override
+    public List<PlatformInfo> findAllReportBoardByStatus() {
+        return platformEntityMapper.findAllReportBoardByStatus();
+    }
+
+    @Override
     public List<PlatformInfo> findByName(String name) {
         return platformEntityMapper.findByName(name);
     }
