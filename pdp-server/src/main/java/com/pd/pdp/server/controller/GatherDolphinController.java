@@ -98,7 +98,7 @@ public class GatherDolphinController {
     @PostMapping("/job_update")
     public Result dataSourcesUpdate(@RequestBody Request<GatherDolphinInfo> request) {
         GatherDolphinInfo gatherDolphinInfo = request.getData();
-        gatherDolphinInfo.setCreateUserId(request.getUserId());
+        gatherDolphinInfo.setUpdateUserId(request.getUserId());
         gatherDolphinInfo.setUpdateTime(new Timestamp(System.currentTimeMillis()));
         gatherDolphinServiceImpl.update(gatherDolphinInfo);
 

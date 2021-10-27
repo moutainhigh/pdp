@@ -11,6 +11,7 @@ import com.pd.pdp.gather.okhttp.FastHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -106,9 +107,10 @@ public class DolphinRequest {
         }
 
         //dolphin job json file
-        String path = MetaDataConvert.class.getClassLoader().getResource(Constant.GATHER_DOLPHIN_FILE_NAME).getPath();
+//        String path = MetaDataConvert.class.getClassLoader().getResource(Constant.GATHER_DOLPHIN_FILE_NAME).getPath();
+        ClassPathResource classPathResource = new ClassPathResource(Constant.GATHER_DOLPHIN_FILE_NAME);
         StringBuilder jsonStringBuilder = new StringBuilder();
-        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(path))));) {
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(classPathResource.getInputStream()));) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 jsonStringBuilder.append(line + Constant.ENTER);

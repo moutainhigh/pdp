@@ -107,7 +107,7 @@ public class JobLogController {
 		return maps;
 	}
 
-	@PostMapping("/logDetailPage")
+	@GetMapping("/logDetailPage")
 	@ApiOperation(value = "调度日志具体信息页面")
 	public String logDetailPage(int id, Model model){
 

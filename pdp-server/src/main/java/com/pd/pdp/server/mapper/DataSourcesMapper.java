@@ -30,7 +30,7 @@ public interface DataSourcesMapper extends BaseMapper<DataSourcesInfo> {
 
     @Select({"<script>",
             "SELECT count(1) FROM data_sources_info",
-            "WHERE create_user_id=#{createUserId}",
+            "WHERE 1=1",
             "<when test='pageVO.data.dataSourceContext!=null and pageVO.data.dataSourceContext !=\"\"'>",
             "AND data_source_context like '%${pageVO.data.dataSourceContext}%'",
             "</when>",
@@ -46,7 +46,7 @@ public interface DataSourcesMapper extends BaseMapper<DataSourcesInfo> {
 
     @Select({"<script>",
             "SELECT * FROM data_sources_info",
-            "WHERE create_user_id=#{createUserId}",
+            "WHERE 1=1",
             "<when test='pageVO.data.dataSourceContext!=null and pageVO.data.dataSourceContext !=\"\"'>",
             "AND data_source_context like '%${pageVO.data.dataSourceContext}%'",
             "</when>",

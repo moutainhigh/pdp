@@ -37,7 +37,7 @@ public interface GatherDolphinMapper extends BaseMapper<GatherDolphinInfo> {
 
     @Select({"<script>",
             "SELECT count(1) FROM gather_dolphin_info",
-            "WHERE create_user_id=#{createUserId}",
+            "WHERE 1=1",
             "<when test='pageVO.data.gatherContext!=null and pageVO.data.gatherContext !=\"\"'>",
             "AND gather_context like '%${pageVO.data.gatherContext}%'",
             "</when>",
@@ -54,7 +54,7 @@ public interface GatherDolphinMapper extends BaseMapper<GatherDolphinInfo> {
     @Select({"<script>",
             "SELECT *",
             "FROM gather_dolphin_info ",
-            "WHERE create_user_id=#{createUserId}",
+            "WHERE 1=1",
             "<when test='pageVO.data.gatherContext!=null and pageVO.data.gatherContext !=\"\"'>",
             "AND gather_context like '%${pageVO.data.gatherContext}%'",
             "</when>",

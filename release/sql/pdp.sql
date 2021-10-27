@@ -389,7 +389,7 @@ CREATE TABLE `data_sources_info` (
 
 LOCK TABLES `data_sources_info` WRITE;
 /*!40000 ALTER TABLE `data_sources_info` DISABLE KEYS */;
-INSERT INTO `data_sources_info` VALUES (2,'hive-cdh-product','hive-cdh-product',2,'org.apache.hive.jdbc.HiveDriver','jdbc:hive2://pd-cdh-192-168-0-9-node:10001','hive','aGl2ZQ==',25,25,'2021-10-25 06:33:37','2021-10-25 15:04:45'),(3,'dolphin-product','dolphin-product',3,'','http://pd-cdh-192-168-0-3-node:12346','zengqy','emVuZ3F5MTIz',25,25,'2021-10-25 06:34:19','2021-10-25 14:35:29'),(4,'mysqlprod','mysql-pro',1,'com.mysql.jdbc.Driver','jdbc:mysql://pd-cdh-192-168-0-3-node:3306','root','cGRyb290MjE=',25,25,'2021-10-25 07:40:05','2021-10-25 15:49:36');
+INSERT INTO `data_sources_info` VALUES (2,'hive-cdh-product','hive-cdh-product',2,'org.apache.hive.jdbc.HiveDriver','jdbc:hive2://pd-cdh-192-168-0-9-node:10001','hive','aGl2ZQ==',25,25,'2021-10-25 06:33:37','2021-10-25 15:04:45'),(3,'dolphin-product','dolphin-product',3,'','http://pd-cdh-192-168-0-3-node:12346','zengqy','emVuZ3F5MTIz',25,25,'2021-10-25 06:34:19','2021-10-25 14:35:29'),(4,'mysqlprod','mysql-pro',1,'com.mysql.jdbc.Driver','jdbc:mysql://pd-cdh-192-168-0-10-node:3306','root','cGRyb290MjE=',25,25,'2021-10-25 07:40:05','2021-10-25 15:49:36');
 /*!40000 ALTER TABLE `data_sources_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1330,3 +1330,21 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2021-10-25 17:50:35
+
+
+--etl.pdp_data_check
+--CREATE TABLE `pdp_data_check` (
+--  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+--  `gather_job_id` varchar(200) NOT NULL COMMENT '任务id',
+--  `system_name` varchar(100) DEFAULT NULL COMMENT '系统名称',
+--  `dbname_input` varchar(255) NOT NULL COMMENT '输入数据源数据库',
+--  `tablename_input` varchar(255) NOT NULL COMMENT '输入数据源表名',
+--  `dbname_output` varchar(255) NOT NULL COMMENT '输出数据源数据库',
+--  `tablename_output` varchar(255) NOT NULL COMMENT '输出数据源表名',
+--  `input_datasource_count` int(11) NOT NULL COMMENT '输入数据源count',
+--  `output_datasource_count` int(11) NOT NULL COMMENT '输出数据源count',
+--  `sync_type` varchar(255) NOT NULL COMMENT '同步类型',
+--  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
+--  `update_time` datetime NOT NULL COMMENT '更新时间',
+--  PRIMARY KEY (`id`)
+--) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
