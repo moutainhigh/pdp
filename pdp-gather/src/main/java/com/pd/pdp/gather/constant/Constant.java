@@ -8,7 +8,7 @@ package com.pd.pdp.gather.constant;
  */
 public interface Constant {
     String SHOW_DATABASES = "show databases";
-    String SHOW_TABLES = "show tables from %s";
+    String SHOW_TABLES = "show tables from `%s`";
     String DOLPHIN_LOGIN_URL = "%s/dolphinscheduler/login";
     String DOLPHIN_TEST_CONN_URL = "%s/dolphinscheduler/ui/";
     String DOLPHIN_ALL_PROJECT_URL = "%s/dolphinscheduler/projects/list-paging?pageSize=1000&pageNo=1&searchVal=";
@@ -18,7 +18,7 @@ public interface Constant {
     //mysql data info
 
     // String SHOW_COLUMNS = "select column_name,column_comment,data_type from information_schema.columns where table_name='%s' and table_schema='%s'";
-    String SHOW_COLUMNS = "show full columns from %s.%s";
+    String SHOW_COLUMNS = "show full columns from `%s`.`%s`";
     String TABLE_COMMENT = "SELECT TABLE_COMMENT FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME='%s'";
     String TABLE_COMMENT_KEY = "TABLE_COMMENT";
     String UNDERLINE = "_";

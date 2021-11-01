@@ -31,7 +31,7 @@ spring:
     url: jdbc:mysql://localhost:3306/pdp_db?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=UTF-8
     username: root
     password: pdroot21
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
   ## 集成Redis
   redis:
     ## Redis服务器连接地址
