@@ -271,7 +271,7 @@ public class GatherDolphinServer {
         //input data source info
         ConnectionProviderHikariCP connOfInputDS = gatherConnector.getConnInPool(gatherDolphinJobEntity.getDriverInput(), gatherDolphinJobEntity.getUrlInput(), gatherDolphinJobEntity.getUsernameInput(), gatherDolphinJobEntity.getPasswordInput());
         //set table col meta
-        List<Map<String, Object>> columnsOfInputTable = connOfInputDS.excuteQuery(String.format(Constant.SHOW_COLUMNS, gatherDolphinJobEntity.getDatabaseNameInput(), gatherDolphinJobEntity.getTableNameInput()));
+        List<Map<String, Object>> columnsOfInputTable = connOfInputDS.excuteQuery(String.format(Constant.SHOW_COLUMNS, gatherDolphinJobEntity.getDatabaseNameInput(), gatherDolphinJobEntity.getDatabaseNameInput(), gatherDolphinJobEntity.getTableNameInput()));
         List<Map<String, String>> columnsInfoList = new ArrayList<>();
         for (Map<String, Object> col : columnsOfInputTable) {
             HashMap<String, String> hashMap = new HashMap<>();

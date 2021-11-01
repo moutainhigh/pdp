@@ -18,7 +18,7 @@ public interface Constant {
     //mysql data info
 
     // String SHOW_COLUMNS = "select column_name,column_comment,data_type from information_schema.columns where table_name='%s' and table_schema='%s'";
-    String SHOW_COLUMNS = "show full columns from `%s`.`%s`";
+    String SHOW_COLUMNS = "SELECT  a.COLUMN_NAME as COLUMN_NAME , a.COLUMN_TYPE as COLUMN_TYPE, REPLACE(REPLACE(REPLACE(a.COLUMN_COMMENT, char(10),' '), char(13),' '), char(9),' ') as COLUMN_COMMENT FROM information_schema.COLUMNS a   LEFT JOIN (SELECT TABLE_NAME,TABLE_COMMENT,TABLE_SCHEMA,TABLE_TYPE  FROM information_schema.TABLES WHERE TABLE_SCHEMA ='%s' ) b ON a.TABLE_NAME = b.TABLE_NAME  WHERE a.TABLE_SCHEMA = '%s' and a.TABLE_NAME = '%s' order by ordinal_position";
     String TABLE_COMMENT = "SELECT TABLE_COMMENT FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME='%s'";
     String TABLE_COMMENT_KEY = "TABLE_COMMENT";
     String UNDERLINE = "_";
