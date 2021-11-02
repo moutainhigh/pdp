@@ -177,6 +177,16 @@ public class DolphinRequest {
 
         String dolphinCheckDataShell = gatherProperties.getDolphinCheckDataShell();
 
+        //sqlserver 做特殊处理
+        if (gatherDolphinJobEntity.getUrlInput().contains(Constant.SQL_SERVER)) {
+            if (port.contains(Constant.SEMICOLONS)) {
+                port = port.substring(0, port.indexOf(Constant.SEMICOLONS));
+            }
+            dolphinCheckDataShell = dolphinCheckDataShell.replace("mysql -s -N -h$ip_input -P$port_input -u$user_name_input -p`echo -n \"$password_input\" | base64 -d`  -e \"$mysql_query\"","sqlcmd -S $ip_input -H $port_input  -U $user_name_input  -P`echo -n \"$password_input\" | base64 -d`  -Q \"$mysql_query\" -h-1| awk -F'('  '{print $1}'");
+            checkSqlInput = checkSqlInput.replace("$dbname_input.$tablename_input","$dbname_input..$tablename_input");
+
+        }
+
         dolphinCheckDataShell = dolphinCheckDataShell
                 .replace(Constant.SYSTEM_NAME, gatherDolphinJobEntity.getSystemName())
                 .replace(Constant.DATABASE_NAME_INPUT, gatherDolphinJobEntity.getDatabaseNameInput())

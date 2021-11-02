@@ -77,7 +77,14 @@ public class GatherDolphinServer {
         logger.info("start exec selectDBByDatasource...");
 
         ConnectionProviderHikariCP jdbcConn = gatherConnector.getConnInPool(driver, url, username, password);
-        List<Map<String, Object>> dbs = jdbcConn.excuteQuery(Constant.SHOW_DATABASES);
+
+        //为sql server做特殊处理
+        List<Map<String, Object>> dbs = null;
+        if (url.contains(Constant.SQL_SERVER)) {
+            dbs = jdbcConn.excuteQuery(Constant.SHOW_DATABASES_SQL_SERVER);
+        } else {
+            dbs = jdbcConn.excuteQuery(Constant.SHOW_DATABASES);
+        }
 
         List<Map<String, String>> list = new ArrayList<>();
 
@@ -96,7 +103,15 @@ public class GatherDolphinServer {
         logger.info("start exec selectTablesByDB...");
 
         ConnectionProviderHikariCP jdbcConn = gatherConnector.getConnInPool(driver, url, username, password);
-        List<Map<String, Object>> tables = jdbcConn.excuteQuery(String.format(Constant.SHOW_TABLES, db));
+
+        List<Map<String, Object>> tables = null;
+        if (url.contains(Constant.SQL_SERVER)) {
+            tables = jdbcConn.excuteQuery(String.format(Constant.SHOW_TABLES_SQL_SERVER, db));
+        } else {
+            tables = jdbcConn.excuteQuery(String.format(Constant.SHOW_TABLES, db));
+        }
+
+
         List<Map<String, String>> list = new ArrayList<>();
 
         //hive/mysql读取的字段名不一致，将字段都替换为tableName
@@ -267,11 +282,27 @@ public class GatherDolphinServer {
 
     public boolean setInputTableInfo(GatherDolphinJobEntity gatherDolphinJobEntity) {
         logger.info("start exec setInputTableInfo...");
+        ConnectionProviderHikariCP connOfInputDS =null;
 
-        //input data source info
-        ConnectionProviderHikariCP connOfInputDS = gatherConnector.getConnInPool(gatherDolphinJobEntity.getDriverInput(), gatherDolphinJobEntity.getUrlInput(), gatherDolphinJobEntity.getUsernameInput(), gatherDolphinJobEntity.getPasswordInput());
         //set table col meta
-        List<Map<String, Object>> columnsOfInputTable = connOfInputDS.excuteQuery(String.format(Constant.SHOW_COLUMNS, gatherDolphinJobEntity.getDatabaseNameInput(), gatherDolphinJobEntity.getDatabaseNameInput(), gatherDolphinJobEntity.getTableNameInput()));
+        List<Map<String, Object>> columnsOfInputTable = null;
+        List<Map<String, Object>> tableCommentListOfInputTable = null;
+        if (gatherDolphinJobEntity.getUrlInput().contains(Constant.SQL_SERVER)) {
+            String urlInput = gatherDolphinJobEntity.getUrlInput();
+            if (!urlInput.contains(Constant.DATABASE_SQL_SERVER)) {
+                urlInput += Constant.DATABASE_SQL_SERVER + gatherDolphinJobEntity.getDatabaseNameInput();
+            }
+
+            //input data source info
+            connOfInputDS = gatherConnector.getConnInPool(gatherDolphinJobEntity.getDriverInput(), urlInput, gatherDolphinJobEntity.getUsernameInput(), gatherDolphinJobEntity.getPasswordInput());
+            columnsOfInputTable = connOfInputDS.excuteQuery(String.format(Constant.SHOW_COLUMNS_SQL_SERVER, gatherDolphinJobEntity.getTableNameInput()));
+            tableCommentListOfInputTable = connOfInputDS.excuteQuery(String.format(Constant.TABLE_COMMENT_SQL_SERVER, gatherDolphinJobEntity.getTableNameInput()));
+
+        } else {
+            connOfInputDS = gatherConnector.getConnInPool(gatherDolphinJobEntity.getDriverInput(), gatherDolphinJobEntity.getUrlInput(), gatherDolphinJobEntity.getUsernameInput(), gatherDolphinJobEntity.getPasswordInput());
+            columnsOfInputTable = connOfInputDS.excuteQuery(String.format(Constant.SHOW_COLUMNS, gatherDolphinJobEntity.getDatabaseNameInput(), gatherDolphinJobEntity.getDatabaseNameInput(), gatherDolphinJobEntity.getTableNameInput()));
+            tableCommentListOfInputTable = connOfInputDS.excuteQuery(String.format(Constant.TABLE_COMMENT, gatherDolphinJobEntity.getTableNameInput()));
+        }
         List<Map<String, String>> columnsInfoList = new ArrayList<>();
         for (Map<String, Object> col : columnsOfInputTable) {
             HashMap<String, String> hashMap = new HashMap<>();
@@ -283,8 +314,8 @@ public class GatherDolphinServer {
         gatherDolphinJobEntity.setColumnsOfInputTable(columnsInfoList);
 
         //[{TABLE_COMMENT=Database privileges}]
-        List<Map<String, Object>> tableCommentListOfInputTable = connOfInputDS.excuteQuery(String.format(Constant.TABLE_COMMENT, gatherDolphinJobEntity.getTableNameInput()));
-        String tableCommentOfInputTable = tableCommentListOfInputTable.get(0).get(Constant.TABLE_COMMENT_KEY).toString();
+
+        String tableCommentOfInputTable = tableCommentListOfInputTable.get(0).getOrDefault(Constant.TABLE_COMMENT_KEY,"").toString();
         gatherDolphinJobEntity.setTableCommentOfInputTable(tableCommentOfInputTable);
 
         return true;

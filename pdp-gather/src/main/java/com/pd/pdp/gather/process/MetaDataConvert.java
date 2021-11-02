@@ -273,6 +273,13 @@ public class MetaDataConvert {
                 break;
             default:
                 json = json.replace("$where", " where 1 = 1 ");
+                //sqlserver特殊处理
+                if (gatherDolphinJobEntity.getUrlInput().contains(Constant.SQL_SERVER)) {
+                    String hiveStgAddColValue = gatherProperties.getHiveStgAddColValue();
+                    json = json.replace("mysqlreader", "sqlserverreader").replace("`", "")
+                            .replace(gatherDolphinJobEntity.getDatabaseNameInput() + ".", "")
+                            .replace(hiveStgAddColValue.substring(0,hiveStgAddColValue.lastIndexOf("as")),"CONVERT(varchar(100), GETDATE(), 120)");
+                }
                 break;
         }
 
