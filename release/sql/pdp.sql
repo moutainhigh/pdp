@@ -18,6 +18,60 @@
 --
 -- Table structure for table `au_auth`
 --
+drop table if  exists gather_quality_info;
+CREATE TABLE `gather_quality_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `gather_job_id` varchar(200) NULL COMMENT '同步任务id',
+  `rules_id` varchar(100) NOT NULL COMMENT '校验规则ID',
+  `check_context` varchar(200) DEFAULT NULL COMMENT '任务说明',
+  `datasource_input_id` int(11) NOT NULL COMMENT '输入数据源ID',
+  `system_name` varchar(100) DEFAULT NULL COMMENT '系统名称',
+  `source_db` varchar(255) NOT NULL COMMENT '输入数据源数据库',
+  `source_table` varchar(255) NOT NULL COMMENT '输入数据源表名',
+  `datasource_output_id` int(11) NOT NULL COMMENT '输出数据源ID',
+  `count_error_range` decimal(3,2) DEFAULT 0.00 COMMENT '误差',
+  `create_user_id` int(11) NOT NULL COMMENT '创建信息用户id',
+  `update_user_id` int(11) NOT NULL COMMENT '修改信息用户id',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+drop table if  exists count_check_result;
+CREATE TABLE `count_check_result`(
+  `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `job_id` INT(11) NOT NULL COMMENT '校验任务ID',
+  `system_name` varchar(100) DEFAULT NULL COMMENT '系统名称',
+  `db_name` VARCHAR(255) NOT NULL COMMENT '结果表数据库名',
+  `table_name` VARCHAR(255) NOT NULL COMMENT '结果表名',
+  `source_count` INT(11)  DEFAULT 0 NOT NULL COMMENT '数据源数据量',
+  `sink_count`  INT(11) DEFAULT 0 NOT NULL COMMENT '目标源数据量',
+  `result` TINYINT(1) DEFAULT '0' COMMENT '校验结果是否合格,0-校验不合格，1-校验合格',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+)ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
+
+drop table if exists  count_check_tmp;
+CREATE TABLE `count_check_tmp` (
+  `id` int(11) NOT NULL DEFAULT '0' COMMENT '校验任务ID',
+  `rules_id` varchar(100) NOT NULL COMMENT '校验规则ID',
+  `system_name` varchar(100) NOT NULL COMMENT '系统名',
+  `source_db` varchar(255) NOT NULL COMMENT '数据库名',
+  `source_table` varchar(255) NOT NULL COMMENT '表名',
+  `count_error_range` decimal(3,2) DEFAULT '0.00' COMMENT '误差',
+  `input_datasource_count` int(11) NOT NULL COMMENT '输入数据源count',
+  `output_datasource_count` int(11) NOT NULL COMMENT '输出数据源count',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+
+
+drop table if  exists quality_rules_info;
+CREATE TABLE `quality_rules_info` (
+                                      `id` int(11) NOT NULL AUTO_INCREMENT,
+                                      `rule_name` varchar(100) DEFAULT NULL,
+                                      PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 DROP TABLE IF EXISTS `au_auth`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1348,3 +1402,7 @@ UNLOCK TABLES;
 --  `update_time` datetime NOT NULL COMMENT '更新时间',
 --  PRIMARY KEY (`id`)
 --) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+
+
+
+

@@ -68,4 +68,7 @@ public interface GatherDolphinMapper extends BaseMapper<GatherDolphinInfo> {
             "</script>"})
     public List<GatherDolphinInfo> selectGatherDolphinInfoList(@Param("pageVO") PageVO<GatherDolphinPageVo> pageVO, @Param("createUserId") int createUserId);
 
+    @Select(value = "select gather_job_id,datasource_output from gather_dolphin_info where datasource_input = #{datasourceInputId} and  database_name_input = #{sourceDb} and table_name = #{sourceTable} ")
+    public GatherDolphinInfo selectGatherJobId(@Param("datasourceInputId") int datasourceInputId , @Param("sourceDb")String  sourceDb, @Param("sourceTable")String sourceTable );
+
 }
