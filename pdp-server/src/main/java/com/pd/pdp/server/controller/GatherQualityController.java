@@ -64,7 +64,7 @@ public class GatherQualityController {
         if (gatherDolphinInfo == null){
             return ResultGenerator.getFailResult("新增校验任务失败，请检查是否已经添加同步任务");
         }
-        String gatherJobInfo = gatherDolphinInfo.getGatherJobInfo();
+        String gatherJobInfo = gatherDolphinInfo.getGatherJobId();
         int datasourceOutputId = gatherDolphinInfo.getDatasourceOutput();
         String rules = gatherQualityInfo.getRulesId();
         String rulesId = rules.substring(1, rules.length() - 1);
