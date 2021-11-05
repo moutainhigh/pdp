@@ -10,7 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.ConcurrentHashMap;
+import javax.annotation.PostConstruct;
+import java.util.concurrent.*;
 
 /**
  * Description:
@@ -20,11 +21,42 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Service
 public class GatherSession {
-    private Logger logger = LoggerFactory.getLogger(GatherSession.class);
+    private static Logger logger = LoggerFactory.getLogger(GatherSession.class);
 
-    private ConcurrentHashMap<String, String> dolphinSessionMap = new ConcurrentHashMap<>();
+    private static GatherSession singleton;
 
-    public String getDolphinSession( String url, String username, String password) {
+    private static ConcurrentHashMap<String, String> dolphinSessionMap = new ConcurrentHashMap<>();
+
+    private static ScheduledExecutorService swapExpiredPool = new ScheduledThreadPoolExecutor(1);
+
+    private static PriorityBlockingQueue<String> queue = new PriorityBlockingQueue<>();
+
+    @PostConstruct
+    public static synchronized GatherSession initial() {
+        logger.info("初始化任务清理sessionId");
+        if (singleton == null) {
+            singleton = new GatherSession();
+            synchronized (GatherSession.class) {
+                swapExpiredPool.scheduleWithFixedDelay(() -> {
+                    logger.info("执行任务清理sessionId");
+                    // TODO Auto-generated method stub
+                    while (true) {
+                        String sessionId = queue.peek();
+                        if (sessionId == null) {
+                            return;
+                        }
+                        dolphinSessionMap.remove(sessionId);
+                        String deleted = queue.poll();
+                        logger.info("删除sessionId key:" + deleted);
+                    }
+                }, 0, 15, TimeUnit.MINUTES);
+            }
+        }
+        return singleton;
+    }
+
+
+    public String getDolphinSession(String url, String username, String password) {
         String key = MD5Util.getMD5Code(url + username + password);
         String sessionId = dolphinSessionMap.get(key);
         boolean isSuccessful = testDolphinConn(sessionId, url);
@@ -48,6 +80,7 @@ public class GatherSession {
             if (JSONObject.parseObject(resp).getInteger(Constant.CODE) == 0) {
                 sessionId = Constant.SESSION_ID + "=" + JSONObject.parseObject(resp).getJSONObject("data").get("sessionId").toString();
                 dolphinSessionMap.put(key, sessionId);
+                queue.add(key);
             }
         }
 

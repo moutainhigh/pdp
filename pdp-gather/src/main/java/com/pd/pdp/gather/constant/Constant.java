@@ -18,12 +18,12 @@ public interface Constant {
     //mysql data info
 
     //sql server
-    String SQL_SERVER= "sqlserver";
-    String DATABASE_SQL_SERVER= "DatabaseName=";
-    String SHOW_COLUMNS_SQL_SERVER ="SELECT col.name AS COLUMN_NAME ,  CONVERT(nvarchar(50),ISNULL(ep.[value], '')) AS COLUMN_TYPE ,  t.name AS COLUMN_COMMENT FROM    dbo.syscolumns col  LEFT  JOIN dbo.systypes t ON col.xtype = t.xusertype  inner JOIN dbo.sysobjects obj ON col.id = obj.id  AND obj.xtype = 'U'  AND obj.status >= 0  LEFT  JOIN dbo.syscomments comm ON col.cdefault = comm.id  LEFT  JOIN sys.extended_properties ep ON col.id = ep.major_id  AND col.colid = ep.minor_id  AND ep.name = 'MS_Description' WHERE   obj.name = '%s' ORDER BY col.colorder";
+    String SQL_SERVER = "sqlserver";
+    String DATABASE_SQL_SERVER = "DatabaseName=";
+    String SHOW_COLUMNS_SQL_SERVER = "SELECT col.name AS COLUMN_NAME ,  CONVERT(nvarchar(50),ISNULL(ep.[value], '')) AS COLUMN_COMMENT  ,  t.name AS COLUMN_TYPE FROM    dbo.syscolumns col  LEFT  JOIN dbo.systypes t ON col.xtype = t.xusertype  inner JOIN dbo.sysobjects obj ON col.id = obj.id  AND obj.xtype = 'U'  AND obj.status >= 0  LEFT  JOIN dbo.syscomments comm ON col.cdefault = comm.id  LEFT  JOIN sys.extended_properties ep ON col.id = ep.major_id  AND col.colid = ep.minor_id  AND ep.name = 'MS_Description' WHERE   obj.name = '%s' ORDER BY col.colorder";
     String SHOW_DATABASES_SQL_SERVER = "SELECT Name FROM SysDatabases ORDER BY Name";
     String SHOW_TABLES_SQL_SERVER = "SELECT Name FROM %s..sysObjects Where XType='U' ORDER BY Name";
-    String TABLE_COMMENT_SQL_SERVER ="SELECT DISTINCT   CONVERT(nvarchar(500),ISNULL(f.value , '')) as TABLE_COMMENT FROM syscolumns a LEFT JOIN systypes b ON a.xusertype= b.xusertype INNER JOIN sysobjects d ON a.id= d.id AND d.xtype= 'U' AND d.name = '%s' LEFT JOIN syscomments e ON a.cdefault= e.id LEFT JOIN sys.extended_properties g ON a.id= G.major_id AND a.colid= g.minor_id LEFT JOIN sys.extended_properties f ON d.id= f.major_id AND f.minor_id= 0";
+    String TABLE_COMMENT_SQL_SERVER = "SELECT DISTINCT   CONVERT(nvarchar(500),ISNULL(f.value , '')) as TABLE_COMMENT FROM syscolumns a LEFT JOIN systypes b ON a.xusertype= b.xusertype INNER JOIN sysobjects d ON a.id= d.id AND d.xtype= 'U' AND d.name = '%s' LEFT JOIN syscomments e ON a.cdefault= e.id LEFT JOIN sys.extended_properties g ON a.id= G.major_id AND a.colid= g.minor_id LEFT JOIN sys.extended_properties f ON d.id= f.major_id AND f.minor_id= 0";
 
     // String SHOW_COLUMNS = "select column_name,column_comment,data_type from information_schema.columns where table_name='%s' and table_schema='%s'";
     String SHOW_COLUMNS = "SELECT  a.COLUMN_NAME as COLUMN_NAME , a.COLUMN_TYPE as COLUMN_TYPE, REPLACE(REPLACE(REPLACE(a.COLUMN_COMMENT, char(10),' '), char(13),' '), char(9),' ') as COLUMN_COMMENT FROM information_schema.COLUMNS a   LEFT JOIN (SELECT TABLE_NAME,TABLE_COMMENT,TABLE_SCHEMA,TABLE_TYPE  FROM information_schema.TABLES WHERE TABLE_SCHEMA ='%s' ) b ON a.TABLE_NAME = b.TABLE_NAME  WHERE a.TABLE_SCHEMA = '%s' and a.TABLE_NAME = '%s' order by ordinal_position";
@@ -45,16 +45,16 @@ public interface Constant {
     String HIVE_EXTERNAL = "external";
     String TBL_PROPERTIES = "\n tblproperties(\"%s.compress\"=\"%s\")";
     String HIVE_PARTITION_INFO = "PARTITIONED BY (%s)";
-    String CREATE_HIVE_TABLE_SQL ="create %s table  IF NOT EXISTS %s.%s (\n%s\n) %s\n%s\n ROW FORMAT DELIMITED FIELDS TERMINATED BY %s \n STORED AS %s\n%s";
+    String CREATE_HIVE_TABLE_SQL = "create %s table  IF NOT EXISTS %s.%s (\n%s\n) %s\n%s\n ROW FORMAT DELIMITED FIELDS TERMINATED BY %s \n STORED AS %s\n%s";
 
     String STG = "dc_stg";
     String ODS = "dc_ods";
-    String  COL_META_NAME ="COLUMN_NAME";
-    String  COL_META_TYPE="COLUMN_TYPE";
-    String  COL_META_COMMENT="COLUMN_COMMENT";
+    String COL_META_NAME = "COLUMN_NAME";
+    String COL_META_TYPE = "COLUMN_TYPE";
+    String COL_META_COMMENT = "COLUMN_COMMENT";
 
-    String  DATAX_JSON_FILE_NAME="datax.json";
-    String  GATHER_DOLPHIN_FILE_NAME="gather_dolphin.json";
+    String DATAX_JSON_FILE_NAME = "datax.json";
+    String GATHER_DOLPHIN_FILE_NAME = "gather_dolphin.json";
 
     String STG_TO_ODS_SQL_OF_INCRE = "stgToOdsSqlOfIncre";
     String STG_TO_ODS_SQL_OF_SNAPSHOT = "stgToOdsSqlOfSnapshot";
@@ -154,7 +154,6 @@ public interface Constant {
     String PROCESS_DEFINITION_IDS = "processDefinitionIds";
 
     String ID = "id";
-
 
 
     String MYSQL_BIGINT = "bigint";

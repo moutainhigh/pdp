@@ -168,14 +168,14 @@ public class MetaDataConvert {
 
             if (dataType.startsWith(Constant.MYSQL_INT) || dataType.startsWith(Constant.MYSQL_SMALLINT) || dataType.startsWith(Constant.MYSQL_MEDIUMINT)) {
                 hiveColType = Constant.HIVE_INT;
-            } else if (dataType.startsWith(Constant.MYSQL_VARCHAR) || dataType.startsWith(Constant.MYSQL_CHAR)) {
+            } else if (dataType.contains(Constant.MYSQL_VARCHAR) || dataType.contains(Constant.MYSQL_CHAR)) {
                 hiveColType = Constant.HIVE_STRING;
             } else if (dataType.startsWith(Constant.MYSQL_TINYINT)) {
                 hiveColType = Constant.HIVE_TINYINT;
             } else if (dataType.startsWith(Constant.MYSQL_DOUBLE)) {
                 hiveColType = dataType;
             } else if (dataType.startsWith(Constant.MYSQL_DECIMAL)) {
-                hiveColType = dataType;
+                hiveColType = Constant.HIVE_STRING;;
             } else if (dataType.startsWith(Constant.MYSQL_FLOAT)) {
                 hiveColType = dataType;
             } else {
@@ -232,7 +232,7 @@ public class MetaDataConvert {
         String fileName = gatherDolphinJobEntity.getSystemName() + Constant.UNDERLINE + db + Constant.UNDERLINE + tableName + Constant.UNDERLINE + gatherProperties.getHiveStgTableLastFix();
         json = json.replace("$fileName", fileName);
 
-        json = json.replace("$path", gatherProperties.getHiveStgTablePath() + Constant.BACKSLASH + fileName);
+        json = json.replace("$path", gatherProperties.getHiveStgTablePath() + Constant.BACKSLASH + fileName.toLowerCase());
 
         String column = "";
 
