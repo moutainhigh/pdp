@@ -475,6 +475,24 @@ UNLOCK TABLES;
 -- Table structure for table `gather_dolphin_info`
 --
 
+DROP TABLE IF EXISTS `process_instance_info`;
+CREATE TABLE `process_instance_info` (
+    `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `ds_id` VARCHAR(11) DEFAULT NULL COMMENT '工作流实例编号',
+    `process_name` VARCHAR(200) DEFAULT NULL COMMENT '工作流名称',
+    `state` VARCHAR(100) DEFAULT NULL COMMENT '工作流状态',
+    `project_name` VARCHAR(200) DEFAULT NULL COMMENT '项目名称',
+    `run_type` VARCHAR(100) DEFAULT NULL COMMENT '运行类型',
+    `scheduling_time` VARCHAR(100) DEFAULT NULL COMMENT '调度时间',
+    `start_time` VARCHAR(100) DEFAULT NULL COMMENT '开始时间',
+    `end_time` VARCHAR(100) DEFAULT NULL COMMENT '结束时间',
+    `duration` VARCHAR(100) DEFAULT NULL COMMENT '运行时长',
+    `run_times` VARCHAR(100) DEFAULT NULL COMMENT '运行次数',
+    `executor` VARCHAR(100) DEFAULT NULL COMMENT '执行用户',
+    `host` VARCHAR(100) DEFAULT NULL COMMENT '执行主机',
+    PRIMARY KEY(`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
+
 DROP TABLE IF EXISTS `gather_dolphin_info`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
