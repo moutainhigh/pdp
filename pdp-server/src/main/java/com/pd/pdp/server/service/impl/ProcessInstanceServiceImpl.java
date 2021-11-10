@@ -3,6 +3,7 @@ package com.pd.pdp.server.service.impl;
 import com.pd.pdp.gather.server.GatherDolphinServer;
 import com.pd.pdp.server.dto.PageDTO;
 import com.pd.pdp.server.entity.ProcessInstanceInfo;
+import com.pd.pdp.server.entity.ProcessInstanceRunStatusStatistics;
 import com.pd.pdp.server.mapper.ProcessInstanceMapper;
 import com.pd.pdp.server.service.ProcessInstanceService;
 import com.pd.pdp.server.utils.PageUtil;
@@ -35,5 +36,10 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
         pageDTO.setPageUtil(pageUtil);
         pageDTO.setList(processInstanceInfoList);
         return pageDTO;
+    }
+
+    @Override
+    public List<ProcessInstanceRunStatusStatistics> statisticsEveryDayRunStatus(int startUnixTime, int endUnixTime, String runState) {
+        return processInstanceMapper.statisticsEveryDayRunStatus(startUnixTime, endUnixTime, runState);
     }
 }

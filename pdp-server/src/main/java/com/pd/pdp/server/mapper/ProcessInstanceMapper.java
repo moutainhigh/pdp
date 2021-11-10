@@ -2,6 +2,7 @@ package com.pd.pdp.server.mapper;
 
 import com.pd.notscan.BaseMapper;
 import com.pd.pdp.server.entity.ProcessInstanceInfo;
+import com.pd.pdp.server.entity.ProcessInstanceRunStatusStatistics;
 import com.pd.pdp.server.vo.ProcessInstancePageVO;
 import com.pd.pdp.server.vo.PageVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -64,4 +65,8 @@ public interface ProcessInstanceMapper extends BaseMapper<ProcessInstanceInfo> {
             "LIMIT #{pageVO.dbIndex,jdbcType=INTEGER},#{pageVO.dbNumber,jdbcType=INTEGER}",
             "</script>"})
     public List<ProcessInstanceInfo> selectProcessInstanceInfoList(@Param("pageVO") PageVO<ProcessInstancePageVO> pageVO);
+
+    @Select(value = "SELECT b.scheduling_time as scheduling_time, count(b.scheduling_time) as count, state FROM (select DATE_FORMAT(a.scheduling_time,'%Y-%m-%d') as  scheduling_time, state from process_instance_info a where a.state = '${runState}' \n" +
+            "and a.scheduling_time <> 'none' and UNIX_TIMESTAMP(a.scheduling_time) >= ${startUnixTime} and UNIX_TIMESTAMP(a.scheduling_time) <= ${endUnixTime}) b group by b.scheduling_time")
+    public List<ProcessInstanceRunStatusStatistics> statisticsEveryDayRunStatus(int startUnixTime, int endUnixTime, String runState);
 }
