@@ -41,7 +41,7 @@
         <projectlombok.version>1.18.12</projectlombok.version>
         <tk.mybatis.version>1.1.7</tk.mybatis.version>
         <commons-pool2.version>2.6.1</commons-pool2.version>
-        <fastjson.version>1.2.47</fastjson.version>
+        <fastjson.version>1.2.51</fastjson.version>
         <sqljdbc4.version>4.0</sqljdbc4.version>
         <commons-lang3.version>3.6</commons-lang3.version>
         <knife4j-spring-boot-starter.version>2.0.4</knife4j-spring-boot-starter.version>
@@ -50,7 +50,6 @@
         <hive.version>2.1.1</hive.version>
         <commons-codec.version>1.14</commons-codec.version>
 
-        <fastjson.version>1.2.47</fastjson.version>
         <knife4j-spring-boot-starter.version>2.0.4</knife4j-spring-boot-starter.version>
 
         <!--        job-->
