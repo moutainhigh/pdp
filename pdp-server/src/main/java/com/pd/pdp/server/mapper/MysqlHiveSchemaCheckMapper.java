@@ -11,6 +11,6 @@ import java.util.List;
 @Mapper
 @Repository
 public interface MysqlHiveSchemaCheckMapper extends BaseMapper<MysqlHiveSchemaCheck> {
-    @Select(value = "select system_name, db_name, table_name, source_add_cloumns, source_delete_cloumns, update_time from pdp_db.mysql_hive_schema_check where DATE_FORMAT(update_time,'%Y-%m-%d') = current_date()")
+    @Select(value = "select system_name, db_name, table_name, status, source_add_cloumns, source_delete_cloumns, update_time from pdp_db.mysql_hive_schema_check where DATE_FORMAT(update_time,'%Y-%m-%d') = current_date()")
     public List<MysqlHiveSchemaCheck> findToday();
 }

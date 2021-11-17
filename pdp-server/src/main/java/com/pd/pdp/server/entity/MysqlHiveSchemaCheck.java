@@ -24,7 +24,7 @@ public class MysqlHiveSchemaCheck {
     @Id
     @Column(name = "id")
     @ApiModelProperty(value = "ID")
-    private Integer id;
+    private String id;
 
     /**
      * 系统名称
@@ -55,6 +55,16 @@ public class MysqlHiveSchemaCheck {
      */
     @ApiModelProperty(value = "数据库表名称")
     private String tableName;
+
+    /**
+     * 校验结果
+     *
+     * Table:     mysql_hive_schema_check
+     * Column:    status
+     * Nullable:  true
+     */
+    @ApiModelProperty(value = "校验结果")
+    private String status;
 
     /**
      * source连接
