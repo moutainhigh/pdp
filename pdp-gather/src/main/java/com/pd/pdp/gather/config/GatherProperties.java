@@ -67,6 +67,9 @@ public class GatherProperties {
     @Value("${hive.ods.partition.col}")
     private String hiveOdsPartitionCol;
 
+    @Value("${hive.ods.partition.col.month}")
+    private String hiveOdsPartitionColMonth;
+
     @Value("${hive.stg.increment.data.func}")
     private String hiveStgIncrementDataFunc;
 

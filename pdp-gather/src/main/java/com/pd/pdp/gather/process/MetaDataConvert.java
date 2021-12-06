@@ -67,17 +67,26 @@ public class MetaDataConvert {
 
         int syncType = gatherDolphinJobEntity.getSyncType();
         String hiveOdsPartitionCol = gatherProperties.getHiveOdsPartitionCol();
+        String hiveOdsPartitionColMonth = gatherProperties.getHiveOdsPartitionColMonth();
         String tableCommentOfInputTable = gatherDolphinJobEntity.getTableCommentOfInputTable();
+        String syncTypeString = "";
 
         //1 全量，2 增量，3 每日快照
         switch (syncType) {
             case 2:
+                if (!hiveOdsPartitionColMonth.trim().isEmpty()) {
+                    partitionInfo = String.format(Constant.HIVE_PARTITION_INFO, hiveOdsPartitionColMonth);
+                }
+                syncTypeString = Constant.SYNC_TYPE_INCRE;
+                break;
             case 3:
                 if (!hiveOdsPartitionCol.trim().isEmpty()) {
                     partitionInfo = String.format(Constant.HIVE_PARTITION_INFO, hiveOdsPartitionCol);
                 }
+                syncTypeString = Constant.SYNC_TYPE_SNAPSHOT;
                 break;
             default:
+                syncTypeString = Constant.SYNC_TYPE_FULL;
                 break;
         }
 
@@ -111,7 +120,7 @@ public class MetaDataConvert {
                 break;
             case Constant.ODS:
                 String hiveOdsTableLastFix = gatherProperties.getHiveOdsTableLastFix();
-                tableName = gatherDolphinJobEntity.getSystemName() + Constant.UNDERLINE + db + Constant.UNDERLINE + tableNameInput + Constant.UNDERLINE + hiveOdsTableLastFix;
+                tableName = gatherDolphinJobEntity.getSystemName() + Constant.UNDERLINE + db + Constant.UNDERLINE + tableNameInput + Constant.UNDERLINE + syncTypeString + Constant.UNDERLINE + hiveOdsTableLastFix;
                 String hiveOdsTableType = gatherProperties.getHiveOdsTableType();
                 String hiveOdsCompressionType = gatherProperties.getHiveOdsCompressionType();
                 String hiveOdsTablePath = gatherProperties.getHiveOdsTablePath();
@@ -175,7 +184,8 @@ public class MetaDataConvert {
             } else if (dataType.startsWith(Constant.MYSQL_DOUBLE)) {
                 hiveColType = dataType;
             } else if (dataType.startsWith(Constant.MYSQL_DECIMAL)) {
-                hiveColType = Constant.HIVE_STRING;;
+                hiveColType = Constant.HIVE_STRING;
+                ;
             } else if (dataType.startsWith(Constant.MYSQL_FLOAT)) {
                 hiveColType = dataType;
             } else {
@@ -278,7 +288,7 @@ public class MetaDataConvert {
                     String hiveStgAddColValue = gatherProperties.getHiveStgAddColValue();
                     json = json.replace("mysqlreader", "sqlserverreader").replace("`", "")
                             .replace(gatherDolphinJobEntity.getDatabaseNameInput() + ".", "")
-                            .replace(hiveStgAddColValue.substring(0,hiveStgAddColValue.lastIndexOf("as")),"CONVERT(varchar(100), GETDATE(), 120)");
+                            .replace(hiveStgAddColValue.substring(0, hiveStgAddColValue.lastIndexOf("as")), "CONVERT(varchar(100), GETDATE(), 120)");
                 }
                 break;
         }

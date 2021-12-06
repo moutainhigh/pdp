@@ -3,6 +3,7 @@ package com.pd.pdp.gather.server;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.pd.pdp.gather.config.GatherProperties;
 import com.pd.pdp.gather.connector.GatherConnector;
 import com.pd.pdp.gather.connector.GatherSession;
 import com.pd.pdp.gather.connector.impl.ConnectionProviderHikariCP;
@@ -36,6 +37,9 @@ public class GatherDolphinServer {
 
     @Autowired
     GatherConnector gatherConnector;
+
+    @Autowired
+    GatherProperties gatherProperties;
 
     @Autowired
     MetaDataConvert metaDataConvert;
@@ -209,7 +213,13 @@ public class GatherDolphinServer {
         HashMap createDolphinJobJsonMap = dolphinRequest.getCreateDolphinJobJson(dataXJsonString, gatherDolphinJobEntity);
         //（2增量）cast(date_format(update_time,'yyyyMM') as int) 按照月分区，（3每日快照）cast(date_format(date_sub(stg_update_time,1 ),'yyyyMMdd') as int)。data check sql sync_type="3"
         //TODO 先硬编码...
-        String replace = createDolphinJobJsonMap.get(Constant.PROCESS_DEFINITION_JSON).toString().replace("cast(date_format(date_sub(stg_update_time,1 ),'yyyyMMdd') as int)", "cast(date_format(update_time,'yyyyMM') as int)").replace("sync_type=\\\"3\\\"", "sync_type=\\\"2\\\"");
+        String partitionColName = gatherProperties.getHiveOdsPartitionCol().split(Constant.BACK_QUOTE)[1].trim();
+        String partitionColNameMonth = gatherProperties.getHiveOdsPartitionColMonth().split(Constant.BACK_QUOTE)[1].trim();
+        String replace = createDolphinJobJsonMap.get(Constant.PROCESS_DEFINITION_JSON).toString()
+                .replace("yyyyMMdd","yyyyMM")
+                .replace(partitionColName,partitionColNameMonth)
+                .replace(Constant.UNDERLINE + Constant.SYNC_TYPE_SNAPSHOT + Constant.UNDERLINE, Constant.UNDERLINE + Constant.SYNC_TYPE_INCRE + Constant.UNDERLINE)
+                .replace("cast(date_format(date_sub(stg_update_time,1 ),'yyyyMMdd') as int)", "cast(date_format(update_time,'yyyyMM') as int)").replace("sync_type=\\\"3\\\"", "sync_type=\\\"2\\\"");
         createDolphinJobJsonMap.put(Constant.PROCESS_DEFINITION_JSON, replace);
 
         // create dolphin job request
@@ -282,7 +292,7 @@ public class GatherDolphinServer {
 
     public boolean setInputTableInfo(GatherDolphinJobEntity gatherDolphinJobEntity) {
         logger.info("start exec setInputTableInfo...");
-        ConnectionProviderHikariCP connOfInputDS =null;
+        ConnectionProviderHikariCP connOfInputDS = null;
 
         //set table col meta
         List<Map<String, Object>> columnsOfInputTable = null;
@@ -315,7 +325,7 @@ public class GatherDolphinServer {
 
         //[{TABLE_COMMENT=Database privileges}]
 
-        String tableCommentOfInputTable = tableCommentListOfInputTable.get(0).getOrDefault(Constant.TABLE_COMMENT_KEY,"").toString();
+        String tableCommentOfInputTable = tableCommentListOfInputTable.get(0).getOrDefault(Constant.TABLE_COMMENT_KEY, "").toString();
         gatherDolphinJobEntity.setTableCommentOfInputTable(tableCommentOfInputTable);
 
         return true;

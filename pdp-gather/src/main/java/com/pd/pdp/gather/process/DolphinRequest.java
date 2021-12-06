@@ -50,10 +50,27 @@ public class DolphinRequest {
         String checkSqlOutput = "";
 
         String partitionColName = gatherProperties.getHiveOdsPartitionCol().split(Constant.BACK_QUOTE)[1].trim();
+        String partitionColNameMonth = gatherProperties.getHiveOdsPartitionColMonth().split(Constant.BACK_QUOTE)[1].trim();
         String dolphinProjectName = gatherDolphinJobEntity.getDolphinProjectName();
 
+        int syncType = gatherDolphinJobEntity.getSyncType();
+        String syncTypeString = "";
+        //1 全量，2 增量，3 每日快照
+        switch (syncType) {
+            case 1:
+                syncTypeString = Constant.SYNC_TYPE_FULL;
+                break;
+            case 2:
+                syncTypeString = Constant.SYNC_TYPE_INCRE;
+                break;
+            case 3:
+                syncTypeString = Constant.SYNC_TYPE_SNAPSHOT;
+                break;
+            default:
+                break;
+        }
         String stgTableName = gatherDolphinJobEntity.getSystemName() + Constant.UNDERLINE + gatherDolphinJobEntity.getDatabaseNameInput() + Constant.UNDERLINE + gatherDolphinJobEntity.getTableNameInput() + Constant.UNDERLINE + gatherProperties.getHiveStgTableLastFix();
-        String odsTableName = gatherDolphinJobEntity.getSystemName() + Constant.UNDERLINE + gatherDolphinJobEntity.getDatabaseNameInput() + Constant.UNDERLINE + gatherDolphinJobEntity.getTableNameInput() + Constant.UNDERLINE + gatherProperties.getHiveOdsTableLastFix();
+        String odsTableName = gatherDolphinJobEntity.getSystemName() + Constant.UNDERLINE + gatherDolphinJobEntity.getDatabaseNameInput() + Constant.UNDERLINE + gatherDolphinJobEntity.getTableNameInput() + Constant.UNDERLINE + syncTypeString + Constant.UNDERLINE + gatherProperties.getHiveOdsTableLastFix();
 
         String name = odsTableName + Constant.UNDERLINE + gatherDolphinJobEntity.getGatherJobId();
         ;
@@ -83,13 +100,13 @@ public class DolphinRequest {
                 checkSqlInput = gatherProperties.getDolphinCheckFullInputQuerySql();
                 checkSqlOutput = gatherProperties.getDolphinCheckFullOutputQuerySql();
                 break;
-            //增量
+            //增量(月分区)
             case 2:
 
                 stgTCols += "stg_t." + Constant.BACK_QUOTE + odsAddColName + Constant.BACK_QUOTE + Constant.COMMA + Constant.ENTER;
                 odsCols += "ods_t." + Constant.BACK_QUOTE + odsAddColName + Constant.BACK_QUOTE + Constant.COMMA + Constant.ENTER;
                 stgToOdsSql = gatherProperties.getDolphinStgToOdsSqlIncrement().replace(Constant.ODS_TABLE_NAME, odsTableName).replace(Constant.STG_TABLE_NAME, stgTableName)
-                        .replace(Constant.ODS_COLS, odsCols).replace(Constant.STG_T_COLS, stgTCols).replace(Constant.STG_COLS, stgCols + " as " + odsAddColName + Constant.COMMA + Constant.SPACE).replace(Constant.PARTITION_COL_NAME, partitionColName);
+                        .replace(Constant.ODS_COLS, odsCols).replace(Constant.STG_T_COLS, stgTCols).replace(Constant.STG_COLS, stgCols + " as " + odsAddColName + Constant.COMMA + Constant.SPACE).replace(Constant.PARTITION_COL_NAME, partitionColNameMonth);
                 description = Constant.SYNC_TYPE_INCRE + Constant.COLON + gatherDolphinJobEntity.getGatherJobId();
                 checkSqlInput = gatherProperties.getDolphinCheckIncrementInputQuerySql();
                 checkSqlOutput = gatherProperties.getDolphinCheckIncrementOutputQuerySql().replace(Constant.DATA_CHECK_COL, odsAddColName);
@@ -182,8 +199,8 @@ public class DolphinRequest {
             if (port.contains(Constant.SEMICOLONS)) {
                 port = port.substring(0, port.indexOf(Constant.SEMICOLONS));
             }
-            dolphinCheckDataShell = dolphinCheckDataShell.replace("mysql -s -N -h$ip_input -P$port_input -u$user_name_input -p`echo -n \"$password_input\" | base64 -d`  -e \"$mysql_query\"","sqlcmd -S $ip_input -H $port_input  -U $user_name_input  -P`echo -n \"$password_input\" | base64 -d`  -Q \"$mysql_query\" -h-1| awk -F'('  '{print $1}'");
-            checkSqlInput = checkSqlInput.replace("$dbname_input.$tablename_input","$dbname_input..$tablename_input");
+            dolphinCheckDataShell = dolphinCheckDataShell.replace("mysql -s -N -h$ip_input -P$port_input -u$user_name_input -p`echo -n \"$password_input\" | base64 -d`  -e \"$mysql_query\"", "sqlcmd -S $ip_input -H $port_input  -U $user_name_input  -P`echo -n \"$password_input\" | base64 -d`  -Q \"$mysql_query\" -h-1| awk -F'('  '{print $1}'");
+            checkSqlInput = checkSqlInput.replace("$dbname_input.$tablename_input", "$dbname_input..$tablename_input");
 
         }
 
@@ -424,9 +441,26 @@ public class DolphinRequest {
     public JSONObject searchDolphinJob(GatherDolphinJobEntity gatherDolphinJobEntity) {
         logger.info("start exec searchDolphinJob...");
 
+        int syncType = gatherDolphinJobEntity.getSyncType();
+        String syncTypeString = "";
+        //1 全量，2 增量，3 每日快照
+        switch (syncType) {
+            case 1:
+                syncTypeString = Constant.SYNC_TYPE_FULL;
+                break;
+            case 2:
+                syncTypeString = Constant.SYNC_TYPE_INCRE;
+                break;
+            case 3:
+                syncTypeString = Constant.SYNC_TYPE_SNAPSHOT;
+                break;
+            default:
+                break;
+        }
+
         String urlDolphin = gatherDolphinJobEntity.getUrlDolphin();
         String dolphinProjectName = gatherDolphinJobEntity.getDolphinProjectName();
-        String odsTableName = gatherDolphinJobEntity.getDatabaseNameInput() + Constant.UNDERLINE + gatherDolphinJobEntity.getTableNameInput() + Constant.UNDERLINE + gatherProperties.getHiveOdsTableLastFix();
+        String odsTableName = gatherDolphinJobEntity.getDatabaseNameInput() + Constant.UNDERLINE + gatherDolphinJobEntity.getTableNameInput() + Constant.UNDERLINE + syncTypeString + Constant.UNDERLINE + gatherProperties.getHiveOdsTableLastFix();
         String name = odsTableName + Constant.UNDERLINE + gatherDolphinJobEntity.getGatherJobId();
 
         String searchUrl = String.format(Constant.SEARCH_URL, urlDolphin, dolphinProjectName, name);
