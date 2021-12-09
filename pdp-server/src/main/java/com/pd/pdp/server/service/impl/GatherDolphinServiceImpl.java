@@ -273,6 +273,9 @@ public class GatherDolphinServiceImpl implements GatherDolphinService {
             gatherDolphinJobEntity.setPasswordDolphin(dataSourcesInfoDolphin.getPassword());
             gatherDolphinJobEntity.setDolphinProjectName(gatherDolphinInfo.getDolphinProjectName());
 
+            //sync type
+            gatherDolphinJobEntity.setSyncType(gatherDolphinInfo.getSyncType());
+
 
             onlineResponse = gatherDolphinServer.online(gatherDolphinJobEntity);
             if (JSONObject.parseObject(onlineResponse).getInteger(Constant.CODE) == 0) {
@@ -311,6 +314,9 @@ public class GatherDolphinServiceImpl implements GatherDolphinService {
             gatherDolphinJobEntity.setPasswordDolphin(dataSourcesInfoDolphin.getPassword());
             gatherDolphinJobEntity.setDolphinProjectName(gatherDolphinInfo.getDolphinProjectName());
 
+            //sync type
+            gatherDolphinJobEntity.setSyncType(gatherDolphinInfo.getSyncType());
+
 
             offlineResponse = gatherDolphinServer.offline(gatherDolphinJobEntity);
             if (offlineResponse != null && JSONObject.parseObject(offlineResponse).getInteger(Constant.CODE) == 0) {
@@ -347,6 +353,9 @@ public class GatherDolphinServiceImpl implements GatherDolphinService {
             gatherDolphinJobEntity.setUsernameDolphin(dataSourcesInfoDolphin.getUsername());
             gatherDolphinJobEntity.setPasswordDolphin(dataSourcesInfoDolphin.getPassword());
             gatherDolphinJobEntity.setDolphinProjectName(gatherDolphinInfo.getDolphinProjectName());
+
+            //sync type
+            gatherDolphinJobEntity.setSyncType(gatherDolphinInfo.getSyncType());
 
 
             delResponse = gatherDolphinServer.delDolphinJob(gatherDolphinJobEntity);
@@ -389,6 +398,9 @@ public class GatherDolphinServiceImpl implements GatherDolphinService {
             gatherDolphinJobEntity.setPasswordDolphin(dataSourcesInfoDolphin.getPassword());
             gatherDolphinJobEntity.setDolphinProjectName(gatherDolphinInfo.getDolphinProjectName());
 
+            //sync type
+            gatherDolphinJobEntity.setSyncType(gatherDolphinInfo.getSyncType());
+
 
             jsonArray = gatherDolphinServer.getDolphinJobJson(gatherDolphinJobEntity);
             if (jsonArray != null) {
@@ -425,6 +437,9 @@ public class GatherDolphinServiceImpl implements GatherDolphinService {
             gatherDolphinJobEntity.setUsernameDolphin(dataSourcesInfoDolphin.getUsername());
             gatherDolphinJobEntity.setPasswordDolphin(dataSourcesInfoDolphin.getPassword());
             gatherDolphinJobEntity.setDolphinProjectName(gatherDolphinInfo.getDolphinProjectName());
+
+            //sync type
+            gatherDolphinJobEntity.setSyncType(gatherDolphinInfo.getSyncType());
 
 
             response = gatherDolphinServer.createJobByJson(gatherDolphinJobEntity);

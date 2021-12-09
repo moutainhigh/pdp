@@ -182,12 +182,12 @@ public class MetaDataConvert {
             } else if (dataType.startsWith(Constant.MYSQL_TINYINT)) {
                 hiveColType = Constant.HIVE_TINYINT;
             } else if (dataType.startsWith(Constant.MYSQL_DOUBLE)) {
-                hiveColType = dataType;
+                hiveColType = Constant.HIVE_DOUBLE;
             } else if (dataType.startsWith(Constant.MYSQL_DECIMAL)) {
                 hiveColType = Constant.HIVE_STRING;
                 ;
             } else if (dataType.startsWith(Constant.MYSQL_FLOAT)) {
-                hiveColType = dataType;
+                hiveColType = Constant.HIVE_FLOAT;
             } else {
                 hiveColType = Constant.HIVE_STRING;
             }
