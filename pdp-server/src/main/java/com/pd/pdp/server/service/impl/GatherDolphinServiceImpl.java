@@ -264,8 +264,8 @@ public class GatherDolphinServiceImpl implements GatherDolphinService {
 
             //input data
             gatherDolphinJobEntity.setSystemName(dataSourcesInfoInput.getSystemName());
-            gatherDolphinJobEntity.setDatabaseNameInput(gatherDolphinInfo.getDatabaseNameInput());
-            gatherDolphinJobEntity.setTableNameInput(gatherDolphinInfo.getTableName());
+            gatherDolphinJobEntity.setDatabaseNameInput(gatherDolphinInfo.getDatabaseNameInput().replaceAll(Constant.MIDLINE,Constant.UNDERLINE));
+            gatherDolphinJobEntity.setTableNameInput(gatherDolphinInfo.getTableName().replaceAll(Constant.MIDLINE,Constant.UNDERLINE));
 
             //dolphin
             gatherDolphinJobEntity.setUrlDolphin(dataSourcesInfoDolphin.getUrl());
@@ -303,8 +303,8 @@ public class GatherDolphinServiceImpl implements GatherDolphinService {
             dataSourcesInfoDolphin = dataSourcesMapper.selectByPrimaryKey(dataSourcesInfoDolphin);
 
             //input data
-            gatherDolphinJobEntity.setDatabaseNameInput(gatherDolphinInfo.getDatabaseNameInput());
-            gatherDolphinJobEntity.setTableNameInput(gatherDolphinInfo.getTableName());
+            gatherDolphinJobEntity.setDatabaseNameInput(gatherDolphinInfo.getDatabaseNameInput().replaceAll(Constant.MIDLINE,Constant.UNDERLINE));
+            gatherDolphinJobEntity.setTableNameInput(gatherDolphinInfo.getTableName().replaceAll(Constant.MIDLINE,Constant.UNDERLINE));
 
             gatherDolphinJobEntity.setGatherJobId(gatherDolphinInfo.getGatherJobId());
 
@@ -345,8 +345,8 @@ public class GatherDolphinServiceImpl implements GatherDolphinService {
             gatherDolphinJobEntity.setGatherJobId(gatherDolphinInfo.getGatherJobId());
 
             //input data
-            gatherDolphinJobEntity.setDatabaseNameInput(gatherDolphinInfo.getDatabaseNameInput());
-            gatherDolphinJobEntity.setTableNameInput(gatherDolphinInfo.getTableName());
+            gatherDolphinJobEntity.setDatabaseNameInput(gatherDolphinInfo.getDatabaseNameInput().replaceAll(Constant.MIDLINE,Constant.UNDERLINE));
+            gatherDolphinJobEntity.setTableNameInput(gatherDolphinInfo.getTableName().replaceAll(Constant.MIDLINE,Constant.UNDERLINE));
 
             //dolphin
             gatherDolphinJobEntity.setUrlDolphin(dataSourcesInfoDolphin.getUrl());
@@ -389,8 +389,8 @@ public class GatherDolphinServiceImpl implements GatherDolphinService {
             gatherDolphinJobEntity.setGatherJobId(gatherDolphinInfo.getGatherJobId());
 
             //input data
-            gatherDolphinJobEntity.setDatabaseNameInput(gatherDolphinInfo.getDatabaseNameInput());
-            gatherDolphinJobEntity.setTableNameInput(gatherDolphinInfo.getTableName());
+            gatherDolphinJobEntity.setDatabaseNameInput(gatherDolphinInfo.getDatabaseNameInput().replaceAll(Constant.MIDLINE,Constant.UNDERLINE));
+            gatherDolphinJobEntity.setTableNameInput(gatherDolphinInfo.getTableName().replaceAll(Constant.MIDLINE,Constant.UNDERLINE));
 
             //dolphin
             gatherDolphinJobEntity.setUrlDolphin(dataSourcesInfoDolphin.getUrl());
@@ -428,8 +428,8 @@ public class GatherDolphinServiceImpl implements GatherDolphinService {
             gatherDolphinJobEntity.setGatherJobId(gatherDolphinInfo.getGatherJobId());
 
             //input data
-            gatherDolphinJobEntity.setDatabaseNameInput(gatherDolphinInfo.getDatabaseNameInput());
-            gatherDolphinJobEntity.setTableNameInput(gatherDolphinInfo.getTableName());
+            gatherDolphinJobEntity.setDatabaseNameInput(gatherDolphinInfo.getDatabaseNameInput().replaceAll(Constant.MIDLINE,Constant.UNDERLINE));
+            gatherDolphinJobEntity.setTableNameInput(gatherDolphinInfo.getTableName().replaceAll(Constant.MIDLINE,Constant.UNDERLINE));
             gatherDolphinJobEntity.setGatherJobInfo(gatherDolphinInfo.getGatherJobInfo());
 
             //dolphin

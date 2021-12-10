@@ -71,9 +71,12 @@ public class DolphinRequest {
         }
         String stgTableName = gatherDolphinJobEntity.getSystemName() + Constant.UNDERLINE + gatherDolphinJobEntity.getDatabaseNameInput() + Constant.UNDERLINE + gatherDolphinJobEntity.getTableNameInput() + Constant.UNDERLINE + gatherProperties.getHiveStgTableLastFix();
         String odsTableName = gatherDolphinJobEntity.getSystemName() + Constant.UNDERLINE + gatherDolphinJobEntity.getDatabaseNameInput() + Constant.UNDERLINE + gatherDolphinJobEntity.getTableNameInput() + Constant.UNDERLINE + syncTypeString + Constant.UNDERLINE + gatherProperties.getHiveOdsTableLastFix();
+        //replace "-" to "_"
+        stgTableName = stgTableName.replaceAll(Constant.MIDLINE, Constant.UNDERLINE);
+        odsTableName = odsTableName.replaceAll(Constant.MIDLINE, Constant.UNDERLINE);
+
 
         String name = odsTableName + Constant.UNDERLINE + gatherDolphinJobEntity.getGatherJobId();
-        ;
         //stg to ods sql
         List<Map<String, String>> columnsOfInputTable = gatherDolphinJobEntity.getColumnsOfInputTable();
         for (Map<String, String> colMap : columnsOfInputTable) {
@@ -461,6 +464,8 @@ public class DolphinRequest {
         String urlDolphin = gatherDolphinJobEntity.getUrlDolphin();
         String dolphinProjectName = gatherDolphinJobEntity.getDolphinProjectName();
         String odsTableName = gatherDolphinJobEntity.getDatabaseNameInput() + Constant.UNDERLINE + gatherDolphinJobEntity.getTableNameInput() + Constant.UNDERLINE + syncTypeString + Constant.UNDERLINE + gatherProperties.getHiveOdsTableLastFix();
+        //replace "-" to "_"
+        odsTableName = odsTableName.replaceAll(Constant.MIDLINE, Constant.UNDERLINE);
         String name = odsTableName + Constant.UNDERLINE + gatherDolphinJobEntity.getGatherJobId();
 
         String searchUrl = String.format(Constant.SEARCH_URL, urlDolphin, dolphinProjectName, name);

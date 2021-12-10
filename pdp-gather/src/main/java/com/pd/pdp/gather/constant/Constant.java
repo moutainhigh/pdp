@@ -30,6 +30,7 @@ public interface Constant {
     String TABLE_COMMENT = "SELECT TABLE_COMMENT FROM INFORMATION_SCHEMA.TABLES  WHERE TABLE_NAME='%s'";
     String TABLE_COMMENT_KEY = "TABLE_COMMENT";
     String UNDERLINE = "_";
+    String MIDLINE = "-";
     String BACKSLASH = "/";
     String QUOTE = "\"";
     String COMMA = ",";

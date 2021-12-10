@@ -94,6 +94,8 @@ public class MetaDataConvert {
             case Constant.STG:
                 String hiveStgTableLastFix = gatherProperties.getHiveStgTableLastFix();
                 tableName = gatherDolphinJobEntity.getSystemName() + Constant.UNDERLINE + db + Constant.UNDERLINE + tableNameInput + Constant.UNDERLINE + hiveStgTableLastFix;
+                //replace "-" to "_"
+                tableName = tableName.replaceAll(Constant.MIDLINE, Constant.UNDERLINE);
                 String hiveStgTableType = gatherProperties.getHiveStgTableType();
                 String hiveStgCompressionType = gatherProperties.getHiveStgCompressionType();
                 String hiveStgTablePath = gatherProperties.getHiveStgTablePath();
@@ -121,6 +123,8 @@ public class MetaDataConvert {
             case Constant.ODS:
                 String hiveOdsTableLastFix = gatherProperties.getHiveOdsTableLastFix();
                 tableName = gatherDolphinJobEntity.getSystemName() + Constant.UNDERLINE + db + Constant.UNDERLINE + tableNameInput + Constant.UNDERLINE + syncTypeString + Constant.UNDERLINE + hiveOdsTableLastFix;
+                //replace "-" to "_"
+                tableName = tableName.replaceAll(Constant.MIDLINE, Constant.UNDERLINE);
                 String hiveOdsTableType = gatherProperties.getHiveOdsTableType();
                 String hiveOdsCompressionType = gatherProperties.getHiveOdsCompressionType();
                 String hiveOdsTablePath = gatherProperties.getHiveOdsTablePath();
@@ -185,7 +189,6 @@ public class MetaDataConvert {
                 hiveColType = Constant.HIVE_DOUBLE;
             } else if (dataType.startsWith(Constant.MYSQL_DECIMAL)) {
                 hiveColType = Constant.HIVE_STRING;
-                ;
             } else if (dataType.startsWith(Constant.MYSQL_FLOAT)) {
                 hiveColType = Constant.HIVE_FLOAT;
             } else {
@@ -240,9 +243,11 @@ public class MetaDataConvert {
         json = json.replace("$fileType", fileType);
 
         String fileName = gatherDolphinJobEntity.getSystemName() + Constant.UNDERLINE + db + Constant.UNDERLINE + tableName + Constant.UNDERLINE + gatherProperties.getHiveStgTableLastFix();
+        //replace "-" to "_"
+        fileName = fileName.replaceAll(Constant.MIDLINE, Constant.UNDERLINE).toLowerCase();
         json = json.replace("$fileName", fileName);
 
-        json = json.replace("$path", gatherProperties.getHiveStgTablePath() + Constant.BACKSLASH + fileName.toLowerCase());
+        json = json.replace("$path", gatherProperties.getHiveStgTablePath() + Constant.BACKSLASH + fileName);
 
         String column = "";
 
