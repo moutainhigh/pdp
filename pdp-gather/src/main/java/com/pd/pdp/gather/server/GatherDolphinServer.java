@@ -84,9 +84,15 @@ public class GatherDolphinServer {
 
         //为sql server做特殊处理
         List<Map<String, Object>> dbs = null;
-        if (url.contains(Constant.SQL_SERVER)) {
+        if (url.startsWith(Constant.SQL_SERVER)) {
             dbs = jdbcConn.excuteQuery(Constant.SHOW_DATABASES_SQL_SERVER);
-        } else {
+        } else if (url.startsWith(Constant.CLICK_HOUSE)) {
+            dbs = jdbcConn.excuteQuery(Constant.SHOW_DATABASES);
+        } else if (url.startsWith(Constant.POSTGRE)) {
+            dbs = jdbcConn.excuteQuery(Constant.SHOW_DATABASES_POSTGRE);
+        }
+        //否则按mysql处理
+        else {
             dbs = jdbcConn.excuteQuery(Constant.SHOW_DATABASES);
         }
 
@@ -109,9 +115,15 @@ public class GatherDolphinServer {
         ConnectionProviderHikariCP jdbcConn = gatherConnector.getConnInPool(driver, url, username, password);
 
         List<Map<String, Object>> tables = null;
-        if (url.contains(Constant.SQL_SERVER)) {
+        if (url.startsWith(Constant.SQL_SERVER)) {
             tables = jdbcConn.excuteQuery(String.format(Constant.SHOW_TABLES_SQL_SERVER, db));
-        } else {
+        } else if (url.startsWith(Constant.CLICK_HOUSE)) {
+            tables = jdbcConn.excuteQuery(String.format(Constant.SHOW_TABLES, db));
+        } else if (url.startsWith(Constant.POSTGRE)) {
+            tables = jdbcConn.excuteQuery(String.format(Constant.SHOW_TABLES_POSTGRE, db));
+        }
+        //否则按mysql处理
+        else {
             tables = jdbcConn.excuteQuery(String.format(Constant.SHOW_TABLES, db));
         }
 
@@ -216,8 +228,8 @@ public class GatherDolphinServer {
         String partitionColName = gatherProperties.getHiveOdsPartitionCol().split(Constant.BACK_QUOTE)[1].trim();
         String partitionColNameMonth = gatherProperties.getHiveOdsPartitionColMonth().split(Constant.BACK_QUOTE)[1].trim();
         String replace = createDolphinJobJsonMap.get(Constant.PROCESS_DEFINITION_JSON).toString()
-                .replace("yyyyMMdd","yyyyMM")
-                .replace(partitionColName,partitionColNameMonth)
+                .replace("yyyyMMdd", "yyyyMM")
+                .replace(partitionColName, partitionColNameMonth)
                 .replace(Constant.UNDERLINE + Constant.SYNC_TYPE_SNAPSHOT + Constant.UNDERLINE, Constant.UNDERLINE + Constant.SYNC_TYPE_INCRE + Constant.UNDERLINE)
                 .replace("cast(date_format(date_sub(stg_update_time,1 ),'yyyyMMdd') as int)", "cast(date_format(update_time,'yyyyMM') as int)").replace("sync_type=\\\"3\\\"", "sync_type=\\\"2\\\"");
         createDolphinJobJsonMap.put(Constant.PROCESS_DEFINITION_JSON, replace);
@@ -297,7 +309,7 @@ public class GatherDolphinServer {
         //set table col meta
         List<Map<String, Object>> columnsOfInputTable = null;
         List<Map<String, Object>> tableCommentListOfInputTable = null;
-        if (gatherDolphinJobEntity.getUrlInput().contains(Constant.SQL_SERVER)) {
+        if (gatherDolphinJobEntity.getUrlInput().startsWith(Constant.SQL_SERVER)) {
             String urlInput = gatherDolphinJobEntity.getUrlInput();
             if (!urlInput.contains(Constant.DATABASE_SQL_SERVER)) {
                 urlInput += Constant.DATABASE_SQL_SERVER + gatherDolphinJobEntity.getDatabaseNameInput();
@@ -308,7 +320,19 @@ public class GatherDolphinServer {
             columnsOfInputTable = connOfInputDS.excuteQuery(String.format(Constant.SHOW_COLUMNS_SQL_SERVER, gatherDolphinJobEntity.getTableNameInput()));
             tableCommentListOfInputTable = connOfInputDS.excuteQuery(String.format(Constant.TABLE_COMMENT_SQL_SERVER, gatherDolphinJobEntity.getTableNameInput()));
 
-        } else {
+        } else if (gatherDolphinJobEntity.getUrlInput().startsWith(Constant.CLICK_HOUSE)) {
+            connOfInputDS = gatherConnector.getConnInPool(gatherDolphinJobEntity.getDriverInput(), gatherDolphinJobEntity.getUrlInput(), gatherDolphinJobEntity.getUsernameInput(), gatherDolphinJobEntity.getPasswordInput());
+            columnsOfInputTable = connOfInputDS.excuteQuery(String.format(Constant.SHOW_COLUMNS_CK, gatherDolphinJobEntity.getDatabaseNameInput(), gatherDolphinJobEntity.getTableNameInput()));
+            tableCommentListOfInputTable = connOfInputDS.excuteQuery(String.format(Constant.TABLE_COMMENT_CK, gatherDolphinJobEntity.getDatabaseNameInput(), gatherDolphinJobEntity.getTableNameInput()));
+
+        } else if (gatherDolphinJobEntity.getUrlInput().startsWith(Constant.POSTGRE)) {
+            connOfInputDS = gatherConnector.getConnInPool(gatherDolphinJobEntity.getDriverInput(), gatherDolphinJobEntity.getUrlInput(), gatherDolphinJobEntity.getUsernameInput(), gatherDolphinJobEntity.getPasswordInput());
+            columnsOfInputTable = connOfInputDS.excuteQuery(String.format(Constant.SHOW_COLUMNS_POSTGRE, gatherDolphinJobEntity.getTableNameInput()));
+            tableCommentListOfInputTable = connOfInputDS.excuteQuery(String.format(Constant.TABLE_COMMENT_POSTGRE, gatherDolphinJobEntity.getTableNameInput()));
+
+        }
+        //mysql
+        else {
             connOfInputDS = gatherConnector.getConnInPool(gatherDolphinJobEntity.getDriverInput(), gatherDolphinJobEntity.getUrlInput(), gatherDolphinJobEntity.getUsernameInput(), gatherDolphinJobEntity.getPasswordInput());
             columnsOfInputTable = connOfInputDS.excuteQuery(String.format(Constant.SHOW_COLUMNS, gatherDolphinJobEntity.getDatabaseNameInput(), gatherDolphinJobEntity.getDatabaseNameInput(), gatherDolphinJobEntity.getTableNameInput()));
             tableCommentListOfInputTable = connOfInputDS.excuteQuery(String.format(Constant.TABLE_COMMENT, gatherDolphinJobEntity.getTableNameInput()));
@@ -324,8 +348,12 @@ public class GatherDolphinServer {
         gatherDolphinJobEntity.setColumnsOfInputTable(columnsInfoList);
 
         //[{TABLE_COMMENT=Database privileges}]
+        Object tableCommentOfInputTableObj = tableCommentListOfInputTable.get(0).getOrDefault(Constant.TABLE_COMMENT_KEY, "");
+        String tableCommentOfInputTable = "";
+        if (tableCommentOfInputTableObj != null) {
+            tableCommentOfInputTable= tableCommentOfInputTableObj.toString();
+        }
 
-        String tableCommentOfInputTable = tableCommentListOfInputTable.get(0).getOrDefault(Constant.TABLE_COMMENT_KEY, "").toString();
         gatherDolphinJobEntity.setTableCommentOfInputTable(tableCommentOfInputTable);
 
         return true;

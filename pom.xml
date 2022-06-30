@@ -49,6 +49,8 @@
         <mysql.version>8.0.11</mysql.version>
         <hive.version>2.1.1</hive.version>
         <commons-codec.version>1.14</commons-codec.version>
+        <clickhouse-jdbc.version>0.2.4</clickhouse-jdbc.version>
+        <postgresql.version>42.2.5</postgresql.version>
 
         <knife4j-spring-boot-starter.version>2.0.4</knife4j-spring-boot-starter.version>
 

@@ -18,12 +18,25 @@ public interface Constant {
     //mysql data info
 
     //sql server
-    String SQL_SERVER = "sqlserver";
+    String SQL_SERVER = "jdbc:sqlserver:";
     String DATABASE_SQL_SERVER = "DatabaseName=";
     String SHOW_COLUMNS_SQL_SERVER = "SELECT col.name AS COLUMN_NAME ,  CONVERT(nvarchar(50),ISNULL(ep.[value], '')) AS COLUMN_COMMENT  ,  t.name AS COLUMN_TYPE FROM    dbo.syscolumns col  LEFT  JOIN dbo.systypes t ON col.xtype = t.xusertype  inner JOIN dbo.sysobjects obj ON col.id = obj.id  AND obj.xtype = 'U'  AND obj.status >= 0  LEFT  JOIN dbo.syscomments comm ON col.cdefault = comm.id  LEFT  JOIN sys.extended_properties ep ON col.id = ep.major_id  AND col.colid = ep.minor_id  AND ep.name = 'MS_Description' WHERE   obj.name = '%s' ORDER BY col.colorder";
     String SHOW_DATABASES_SQL_SERVER = "SELECT Name FROM SysDatabases ORDER BY Name";
     String SHOW_TABLES_SQL_SERVER = "SELECT Name FROM %s..sysObjects Where XType='U' ORDER BY Name";
     String TABLE_COMMENT_SQL_SERVER = "SELECT DISTINCT   CONVERT(nvarchar(500),ISNULL(f.value , '')) as TABLE_COMMENT FROM syscolumns a LEFT JOIN systypes b ON a.xusertype= b.xusertype INNER JOIN sysobjects d ON a.id= d.id AND d.xtype= 'U' AND d.name = '%s' LEFT JOIN syscomments e ON a.cdefault= e.id LEFT JOIN sys.extended_properties g ON a.id= G.major_id AND a.colid= g.minor_id LEFT JOIN sys.extended_properties f ON d.id= f.major_id AND f.minor_id= 0";
+
+    //clickhouse
+    String CLICK_HOUSE = "jdbc:clickhouse:";
+    String SHOW_COLUMNS_CK = "select name as COLUMN_NAME,type as COLUMN_TYPE,comment as COLUMN_COMMENT from system.columns where database = '%s' and table='%s'";
+    String TABLE_COMMENT_CK = "select comment as TABLE_COMMENT from  system.tables  where database = '%s' and name='%s'";
+
+    //postgresql
+    String POSTGRE = "jdbc:postgresql:";
+    String SHOW_DATABASES_POSTGRE  = "select datname from pg_database;";
+    String SHOW_TABLES_POSTGRE  = "SELECT table_name  FROM information_schema.tables WHERE table_schema = 'public' and table_catalog='%s'";
+    String SHOW_COLUMNS_POSTGRE = "Select a.attname as \"COLUMN_NAME\",(select description from pg_catalog.pg_description where objoid=a.attrelid and objsubid=a.attnum) as \"COLUMN_COMMENT\" ,pg_catalog.format_type(a.atttypid,a.atttypmod) as \"COLUMN_TYPE\" from pg_catalog.pg_attribute a where 1=1 and a.attrelid=(select oid from pg_class where relname='%s' ) and a.attnum>0 and not a.attisdropped order by a.attnum";
+    String TABLE_COMMENT_POSTGRE = "select cast(obj_description(relfilenode,'pg_class') as varchar) as \"TABLE_COMMENT\" from pg_class c where relname='%s'";
+
 
     // String SHOW_COLUMNS = "select column_name,column_comment,data_type from information_schema.columns where table_name='%s' and table_schema='%s'";
     String SHOW_COLUMNS = "SELECT  a.COLUMN_NAME as COLUMN_NAME , a.COLUMN_TYPE as COLUMN_TYPE, REPLACE(REPLACE(REPLACE(a.COLUMN_COMMENT, char(10),' '), char(13),' '), char(9),' ') as COLUMN_COMMENT FROM information_schema.COLUMNS a   LEFT JOIN (SELECT TABLE_NAME,TABLE_COMMENT,TABLE_SCHEMA,TABLE_TYPE  FROM information_schema.TABLES WHERE TABLE_SCHEMA ='%s' ) b ON a.TABLE_NAME = b.TABLE_NAME  WHERE a.TABLE_SCHEMA = '%s' and a.TABLE_NAME = '%s' order by ordinal_position";
