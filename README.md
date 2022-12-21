@@ -12,7 +12,7 @@ pdp大数据平台后端
 #### 安装教程
 
 ```
-git clone https://codeup.aliyun.com/60a7c4c62c5969c370c58471/pudu_data_platform/pdp.git    // 把模板下载到本地
+git clone https://github.com/zz-big/pdp.git    // 把模板下载到本地
 
 运行resources目录下pdp.sql创建表
 
@@ -41,7 +41,7 @@ pdp大数据平台前端
 #### 安装教程
 
 ```
-git clone https://codeup.aliyun.com/60a7c4c62c5969c370c58471/pudu_data_platform/pdp-web.git      // 把模板下载到本地
+git clone https://github.com/zz-big/pdp-web.git      // 把模板下载到本地
 cd pdp-web    // 进入模板目录
 npm install         // 安装项目依赖，等待安装完成之后，安装失败可用 cnpm 或 yarn
 
